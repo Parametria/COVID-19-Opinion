@@ -1,0 +1,168 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Offside&display=swap');
+
+body {
+    font-family: "Source Sans Pro","Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: #555555;
+    background-color: #ffffff;
+    font-weight: normal;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+/* This change the style of the main container that wraps the whole R Markdown document. It allows the parallax image to be full width */
+.main-container {
+    max-width: 100% !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Then we place our content with this style because we don't want it to be full width */
+.mycontent{
+      max-width: 900px !important;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+      padding-right: 15px;
+      padding-left: 15px;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+    color: #4F89C8;
+    margin-top: 84px;
+}
+
+h1 {
+  padding-top: 50px;
+  font-family: Offside;
+}
+
+h1.title {
+  text-align: center;
+}
+
+pre {
+    border: 0px solid #cccccc;
+    border-radius: 0px;
+ }
+
+blue { 
+  background-color:#e6f0ff; 
+  border-radius: 5px; 
+  padding: 20px;
+}
+
+/* ---------- Links ----------------- */
+a {
+  color: #4F89C8;
+}
+a:hover {
+  color: #4F89C8;
+}
+
+
+
+
+/* ---------- TOC ----------------- */
+
+
+#TOC {
+  top: 25%;
+  position: fixed;
+  background-color: transparent;
+  width: 210px;
+}
+
+.tocify {
+  border: none;
+  background-color: transparent;
+  color: grey;
+  border-radius: 0px;
+}
+
+.list-group-item.active {
+    color: #4F89C8;
+    background-color: transparent;
+    border-left: solid;
+    border-color: #4F89C8;
+}
+.list-group-item:hover {
+    color: #4F89C8;
+    background-color: transparent;
+    border-left: solid;
+    border-color: #4F89C8;
+}
+
+.tocify-extend-page {
+  display: none;
+}
+
+/* ------ This is just to fix the bug on Safari where table of content is on top of content */
+.toc-content {
+  margin-left: 210px
+}
+
+/* ------ Don't display on small media */
+@media (max-width: 1200px) {
+  #TOC {
+    width: auto;
+    display: none;
+  }
+  .toc-content {
+    margin-left: auto
+  }
+}
+
+
+/* ---------- Button ----------------- */
+.btn {
+    border-width: 0 0px 0px 0px;
+    font-weight: normal;
+    text-transform: ;
+    color: #4F89C8;
+}
+
+.btn-default {
+    color: #4F89C8;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+.pill-nav a {
+  display: inline-block;
+  color: #4F89C8;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+/* Change the color of links on mouse-over */
+.pill-nav a:hover {
+  background-color:  #4F89C8;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* Add a color to the active/current link */
+.pill-nav a.active {
+  background-color:  #4F89C8;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #4F89C8;
+}
+
+/*-------CAPTION_---------*/
+.caption {
+  font-size: 0.9em;
+  font-style: italic;
+  color: grey;
+  margin-right: 10%;
+  margin-left: 10%;  
+  text-align: justify;
+}

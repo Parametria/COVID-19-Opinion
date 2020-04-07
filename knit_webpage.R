@@ -1,4 +1,4 @@
-setwd("~/Desktop/extra/covid19_mex_Reportes/")
+setwd("~/Desktop/extra/COVID-19-Opinion//")
 
 
 ## Build PDFs

@@ -2,8 +2,7 @@
 title: "Análisis de Opinión Pública en México"
 author: "<center>[Parametría](http://parametria.com.mx/)</center>"
 date: "<center>`r format(Sys.time(), '%d/%m/%Y')`</center>"
-twitter: "lolo7no"
-github: "LorenzoLeon/covid19_mex_Reportes"
+github: "Parametria/COVID-19-Opinion"
 logo: "logo_gallery.png"
 mail: lorenzoln@parametria.com.mx
 lang: es
@@ -32,21 +31,21 @@ params:
 ```{block eval=FALSE, include=params$view_html}
 <center>
 <div class="pill-nav">
-<a class="active" href='https://lorenzoleon.github.io/covid19_mex_Reportes/'><b>Análisis Parametría</b></a>
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/RedesSociales.html'><b>Análisis Redes Sociales</b></a>
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/DatosSalud.html'><b>Reporte Secretaría de Salud</b></a>
+<a class="active" href='https://Parametria.github.io/COVID-19-Opinion/'><b>Análisis Parametría</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Análisis Redes Sociales</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/DatosSalud.html'><b>Reporte Secretaría de Salud</b></a>
 </div>
 </center>
 <center>
 <br>
 <b>
-Si quiere descargar el reporte completo en pdf haga click [AQUÍ](https://lorenzoleon.github.io/covid19_mex_Reportes/AnalisisParametria.pdf)
+Si quiere descargar el reporte completo en pdf haga click [AQUÍ](https://Parametria.github.io/COVID-19-Opinion/AnalisisParametria.pdf)
 </b>
 <br>
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
-[Rmarkdown](https://github.com/LorenzoLeon/covid19_mex_Reportes/blob/master/AnalisisParametria.Rmd)
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/blob/master/AnalisisParametria.Rmd)
 </center>
 <br>
 
@@ -1190,10 +1189,10 @@ Sin duda el camino que aún queda por combatir ante esta pandemia es largo, empe
 ***
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
-[Rmarkdown](https://github.com/LorenzoLeon/covid19_mex_Reportes/REPORTE_COVID.Rmd)
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/REPORTE_COVID.Rmd)
 <br>
 También puedes descargar el tema de este Rmd [aquí](https://holtzy.github.io/Pimp-my-rmd/).
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/LorenzoLeon/covid19_mex_Reportes).
+Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/Parametria/COVID-19-Opinion).
 ```

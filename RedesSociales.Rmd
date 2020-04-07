@@ -2,8 +2,7 @@
 title: "Análisis de Redes Sociales Twitter"
 author: "<center>[Parametría](http://parametria.com.mx/)</center>"
 date: "<center>`r format(Sys.time(), '%d/%m/%Y')`</center>"
-twitter: "lolo7no"
-github: "LorenzoLeon/covid19_mex_Reportes"
+github: "Parametria/COVID-19-Opinion"
 logo: "logo_gallery.png"
 mail: lorenzoln@parametria.com.mx
 lang: es
@@ -32,19 +31,19 @@ params:
 ```{block eval=FALSE, include=params$view_html}
 <center>
 <div class="pill-nav">
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/'><b>Análisis Parametría</b></a>
-<a class="active" href='https://lorenzoleon.github.io/covid19_mex_Reportes/RedesSociales.html'><b>Análisis Redes Sociales</b></a>
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
-<a href='https://lorenzoleon.github.io/covid19_mex_Reportes/DatosSalud.html'><b>Reporte Secretaría de Salud</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/'><b>Análisis Parametría</b></a>
+<a class="active" href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Análisis Redes Sociales</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/DatosSalud.html'><b>Reporte Secretaría de Salud</b></a>
 </div>
 <br>
 <b>
-Si quiere descargar el reporte completo en pdf haga click [AQUÍ](https://lorenzoleon.github.io/covid19_mex_Reportes/RedesSociales.pdf)
+Si quiere descargar el reporte completo en pdf haga click [AQUÍ](https://Parametria.github.io/COVID-19-Opinion/RedesSociales.pdf)
 </b>
 <br>
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
-[Rmarkdown](https://github.com/LorenzoLeon/covid19_mex_Reportes/blob/master/RedesSociales.Rmd)
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/blob/master/RedesSociales.Rmd)
 </center>
 <br>
 ```
@@ -285,10 +284,10 @@ if(params$view_html) {
 }
 ```
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/linea_tiempo_tweets.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_tweets.html)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-[\underline{Link a esta gráfica}](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/linea_tiempo_sentimiento_tweets.png)
+[\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
 \newpage
 ```
 
@@ -312,7 +311,7 @@ Esta gráfica indica que la palabras relacionadas con las consecuencias del viru
 include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/WC_topicos_twitter.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_topicos_twitter.html)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 \newpage
@@ -328,7 +327,7 @@ Los hashtags que se relacionaron con mayor frecuencia a los tweets hacen referen
 include_graphics(path ="03_graficas/WC_hashtags_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/WC_hashtags_twitter.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_hashtags_twitter.html)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 \newpage
@@ -344,10 +343,10 @@ Resulta interesante observar que la discusión pública en redes se relaciona fu
 include_graphics(path ="03_graficas/WC_ats_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/WC_menciones_twitter.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_menciones_twitter.html)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-[\underline{Link a esta gráfica}](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/WC_menciones_twitter.pdf)
+[\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_menciones_twitter.pdf)
 \newpage
 ```
 
@@ -468,11 +467,11 @@ if(is_html_output()) {
 ```
 
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/linea_tiempo_sentimiento_tweets.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.html)
 ```
 
 ```{block eval=FALSE, include=params$view_pdf}
-[\underline{Link a esta gráfica}](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/linea_tiempo_sentimiento_tweets.png)
+[\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
 \newpage
 ```
 
@@ -619,10 +618,10 @@ if(is_html_output()) {
 ```
 
 ```{block eval=FALSE, include=params$view_html}
-[Link a esta gráfica](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/Emojis_twitter.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/Emojis_twitter.html)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-[\underline{Link a esta gráfica}](https://lorenzoleon.github.io/covid19_mex_Reportes/03_graficas/Emojis_twitter.pdf)
+[\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/Emojis_twitter.pdf)
 \newpage
 ```
 
@@ -631,10 +630,10 @@ if(is_html_output()) {
 ***
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
-[Rmarkdown](https://github.com/LorenzoLeon/covid19_mex_Reportes/REPORTE_COVID.Rmd)
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/REPORTE_COVID.Rmd)
 <br>
 También puedes descargar el tema de este Rmd [aquí](https://holtzy.github.io/Pimp-my-rmd/).
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/LorenzoLeon/covid19_mex_Reportes).
+Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/Parametria/COVID-19-Opinion).
 ```

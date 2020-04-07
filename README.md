@@ -1,6 +1,6 @@
 
 ## Reporte COVID-19
-[Revise el Reporte Interactivo aquí](https://lorenzoleon.github.io/covid19_mex_Reportes/)
+[Revise el Reporte Interactivo aquí](https://Parametria.github.io/COVID-19-Opinion/)
 
 Autores : [@lolo7no](https://twitter.com/lolo7no) y [Guzmart_](https://twitter.com/guzmart_)
  
@@ -98,8 +98,8 @@ plotly::layout(tickvalues ="",
                                                font = list(color="red")))
 ```
 Esta es una versión estática similar
-![linea de tiempo](https://github.com/LorenzoLeon/covid19_mex_Reportes/blob/master/03_graficas/linea_tiempo.png)
+![linea de tiempo](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo.png)
 
 Esta es una versión estática de casos por grupos de edad
-![Proporciones por sexo y edad](https://github.com/LorenzoLeon/covid19_mex_Reportes/blob/master/03_graficas/Prop_sexo_edad.png)
+![Proporciones por sexo y edad](https://Parametria.github.io/COVID-19-Opinion/03_graficas/Prop_sexo_edad.png)
 
