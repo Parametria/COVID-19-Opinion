@@ -240,7 +240,7 @@ plotly
 
 ```
 <br>
-[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/linea_tiempo.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo.html)
 <br>
 
 # <b>Pirámide poblacional</b>
@@ -367,7 +367,7 @@ saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
 plotly
 ```
 <br>
-[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/Prop_sexo_edad.html)
+[Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/Prop_sexo_edad.html)
 <br>
 
 # <b>Distribución de casos</b> {.tabset .tabset-fade .tabset-pills}
@@ -647,7 +647,7 @@ mymap
 
 ```
 <br>
-[Link a este Mapa](https://Parametria.github.io/COVID-19-Opinion/Mapa_Casos.html)
+[Link a este Mapa](https://Parametria.github.io/COVID-19-Opinion/03_graficas/Mapa_Casos.html)
 
 # Info
 ***
