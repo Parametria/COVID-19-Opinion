@@ -72,6 +72,7 @@ require(plotly, quietly = T)
 require(htmlwidgets, quietly = T)
 require(knitr, quietly = T)
 require(hrbrthemes, quietly = T)
+require(RColorBrewer, quietly = T)
 
 saveWidgetFix <- function (widget,file,...) {
   ## A wrapper to saveWidget which compensates for arguable BUG in
