@@ -1029,7 +1029,7 @@ Por un lado, los débiles sistemas de salud hacen imposible atender efectivament
 ***
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
-[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/REPORTE_COVID.Rmd)
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion)
 <br>
 También puedes descargar el tema de este Rmd [aquí](https://holtzy.github.io/Pimp-my-rmd/).
 ```
