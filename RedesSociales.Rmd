@@ -296,12 +296,28 @@ Este ejercicio permite conocer los verbatismos m√°s asociados con el tema de an√
 <br>
 \newline
 <br>
-```{r fig.width=9, out.width="100%", fig.height=7, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
+```{r fig.width=9, out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_pdf, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
 require(kableExtra, quietly = T)
 options(knitr.table.format = "latex")
 dt <- readRDS("01_datos/tols.rds")
 kable(dt, booktabs = T, col.names = c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"))
 ```
+```{r fig.width=9, out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
+DT::datatable(dt, 
+                class= "cell-border stripe", 
+                rownames = F,
+                colnames=c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"),
+                filter = "top",
+                extensions = "Buttons", 
+                width = "100%",
+                options = list(dom="Bfrtip", 
+                               pageLength = 10,scrollX = T,
+                               buttons = c("copy", "excel"), 
+                                autowidth = T)
+  )%>%
+  DT::formatStyle(columns = c(1:8), fontSize = '8pt')%>%DT::formatStyle(columns = 8, fontSize = '4pt')
+```
+
 ```{block eval=FALSE, include=params$view_pdf}
 \newpage
 ```

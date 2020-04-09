@@ -36,11 +36,6 @@ params:
 <a class="active" href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
 </div>
 <br>
-<b>
-Si quiere descargar el reporte completo en pdf haga click [AQUÍ](https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.pdf)
-</b>
-<br>
-<br>
 Descargue el archivo RMarkdown para crear este reporte aquí
 [Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/blob/master/OpinionPublica.Rmd)
 </center>

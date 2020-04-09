@@ -34,11 +34,14 @@ webshot::webshot("03_graficas/WC_topicos_twitter.html","03_graficas/WC_topicos_t
                  delay =5, vwidth = 1000, vheight=1000)
 
 hashtags <- tweets %>% 
-  select(id_str, hashtags)%>%unnest(cols = hashtags)%>%
+  select(id_str, hashtags)%>%
+  unnest(cols = hashtags)%>%
+  mutate(hashtags = stri_trans_general(hashtags, "latin-ascii"))%>%
   drop_na() %>%group_by(hashtags) %>% summarise(n = n()) %>% 
   arrange(desc(n)) %>% 
   filter(!stri_detect(hashtags, fixed = "covid", case_insensitive = T),
          !stri_detect(hashtags, fixed = "coronavirus", case_insensitive = T))
+head(hashtags, 20)
 WC_hashtags_twitter <- wordcloud2(head(hashtags, 150), 
                                   shape = "circle", 
                                   size = 1, 
@@ -54,8 +57,16 @@ webshot::webshot("03_graficas/WC_hashtags_twitter.html","03_graficas/WC_hashtags
                  delay =5, vwidth = 1000, vheight=1000)
 
 
-ats <- tweets %>% select(id_str, ats)%>%unnest(cols = ats)%>% mutate_all(tolower)%>%
-  drop_na() %>%group_by(ats) %>% summarise(n = n()) %>% arrange(desc(n))%>%
+ats <- tweets %>% 
+  select(id_str, ats)%>%
+  unnest(cols = ats)%>%
+  mutate_all(tolower)%>%
+  drop_na() %>%
+  group_by(ats) %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n))%>%
+  filter(!stri_detect(ats, fixed = "Claudi", case_insensitive = T))
+head(ats, 20)
 WC_menciones_twitter <- wordcloud2(head(ats, 100),
                                    shape = "diamond", 
                                    size = 1, 
@@ -74,7 +85,7 @@ webshot::webshot("03_graficas/WC_ats_twitter.html","03_graficas/WC_ats_twitter.p
 
 headfreq <- head(t_pal_mas_freq, 20)
 headhash <- head(hashtags, 20)
-headats <- head(ats[-1,], 20)
+headats <- head(ats, 20)
 
 tol <- bind_cols(headhash, headfreq, headats)
 saveRDS(tol, "01_datos/tols.rds")
