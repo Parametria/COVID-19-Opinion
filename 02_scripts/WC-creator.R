@@ -47,7 +47,7 @@ hashtags <- tweets %>%
 head(hashtags, 20)
 WC_hashtags_twitter <- wordcloud2(head(hashtags, 150), 
                                   shape = "circle", 
-                                  size = .3, 
+                                  size = .65, 
                                   #color = brewer.pal(n = 6, name = "Spectral"),
                                   fontWeight = "bold",
                                   minRotation = 0,#1/pi, 
