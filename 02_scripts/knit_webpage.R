@@ -20,8 +20,4 @@ rm(list = ls(all.names = TRUE))
 rmarkdown::render(input = "OpinionPublica.Rmd", 
                   output_format = "html_document", output_file = "OpinionPublica")
 rm(list = ls(all.names = TRUE))
-rmarkdown::render(input = "DatosSalud.Rmd", 
-                  output_format = "html_document",
-                  output_file = "DatosSalud")#, params = "ask")
-rm(list = ls(all.names = TRUE))
 
