@@ -23,7 +23,7 @@ output:
     toc: no
     toc_depth: '1'
     keep_tex: false
-    extra_dependencies: ["xcolor"]
+    extra_dependencies: ["xcolor", "booktabs", "makecell"]
 params: 
   view_pdf: !r knitr::is_latex_output()
   view_html: !r knitr::is_html_output()
@@ -48,23 +48,12 @@ Descargue el archivo RMarkdown para crear este reporte aquí
 ```
 
 ***
-```{block eval=FALSE, include=params$view_html}
+
 El análisis de redes sociales es una buena herramienta para conocer y entender la opinión pública usuaria de redes sociales. Cabe señalar que, dado el contexto socioeconómico en nuestro país y la brecha tecnológica característica de los países en desarrollo, este grupo recoge características específicas que merece un tratamiento diferenciado de los trabajos demoscópicos realizados en vivienda o por teléfono. 
 <br>
+\newline
 El presente trabajo se realiza con interfaces basadas en la API de Twitter, donde se filtra- en tiempo real- los tweets de interés para crear una base de datos propia analizable. A partir de este análisis se identifican los topics, hashtags y utilizadores más importantes para el seguimiento. Este análisis se basa en un scrapping personal de tweets en México que hacen mención de COVID-19.
-```
-```{block eval=FALSE, include=params$view_pdf}
-\textbf{Análisis de Sentimiento y Temas}
-\newline
-El análisis de redes sociales es una buena herramienta para conocer y entender la opinión pública usuaria de redes sociales. Cabe señalar que, dado el contexto socioeconómico en nuestro país y la brecha tecnológica característica de los países en desarrollo, este grupo recoge características específicas que merece un tratamiento diferenciado de los trabajos demoscópicos realizados en vivienda o por teléfono. Sin embargo, dada la continua expansión de las redes sociales y su más frecuente uso como medio de información hace imprescindible su mayor análisis. Sin duda, hoy en día, el tweet es la forma de expresión más rápida, en tiempo real y efectiva usada por un importante grupo de población.
-\newline
-\textbf{Etapas de Análisis}
-\newline
-Iniciando con una extracción directa de todos los tweets donde hay menciones o utilizan las palabras clave predeterminadas creamos un diagnóstico preliminar. Esta descarga se realiza con interfaces basadas en la API de Twitter, donde filtramos en tiempo real los tweets de interés para crear una base de datos propia analizable. 
-\newline
-A partir de este análisis se identifican los topics, hashtags y utilizadores más importantes para el seguimiento. Para Parametría es poco relevante los seguimientos a tiempo real, dado que es imposible ex ante conocer los futuros temas o tendencias coyunturales. Este análisis se basa en un scrapping personal de tweets en México que hacen mención de COVID-19.
 \newpage
-```
 <br>
 ```{r echo=F, background="white", message = FALSE, warning = FALSE}
 require(rvest, quietly = T)
@@ -119,7 +108,7 @@ BigramTokenizer <-
   function(x) {
     unlist(lapply(ngrams(words(x), 2), paste, collapse = " "), use.names = FALSE)
   }
-tweets <- readRDS("01_datos/covid_2.rds") %>% 
+tweets <- readRDS("01_datos/covid_6Mar20.rds") %>% 
   as_tibble() %>% 
   distinct(id_str, .keep_all = T)%>%
   mutate(
@@ -143,11 +132,10 @@ tweets <- readRDS("01_datos/covid_2.rds") %>%
                        format = "%Y-%m-%d %T") - hours(7),
    RT = stri_detect(text, fixed = "RT"),
    replied_TO = ifelse(RT, stri_extract_first(text, regex = "@[[:alnum:]_]+"), "")
-  ) %>% filter(fecha>as.POSIXct("2020-03-15", format = "%Y-%m-%d"),fecha<as.POSIXct("2020-03-20", format = "%Y-%m-%d") )
+  ) %>% filter(fecha>as.POSIXct("2020-03-31", format = "%Y-%m-%d"))
 
 saveRDS(tweets, "01_datos/tweets.rds")
 ```
-Los datos sobre tweets hasta `r max(tweets$fecha)` tienen `r nrow(tweets)` tweets y `r ncol(tweets)` variables.
 
 # <b>Tiempo</b>
 ***
@@ -177,11 +165,13 @@ if(maxmonth == minmonth){
 }
 
 ```
+Los datos sobre tweets hasta `r max(tweets$fecha)` tienen `r nrow(tweets)` tweets y `r ncol(tweets)` variables.
 
-
-El gráfico de Tiempo presenta el número de tweets que mencionan el #COVID19MX. Estos tweets se muestran según la hora de su publicación desde el `r fectoprint` de `r format(min(tweets$fecha),"%Y")`. La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. 
+El gráfico de Tiempo presenta el número de tweets que mencionan el #COVID19MX. Estos tweets se muestran según la hora de su publicación desde el `r fectoprint` de `r format(min(tweets$fecha),"%Y")`.
+```{block eval=FALSE, include=params$view_html}
+La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. 
+```
 ```{block eval=FALSE, include=params$view_pdf}
-\newline
 Es importante remarcar que los tweets tienen ciclos normales de creación determinado por las horas de descanso, así como la escalada esperada en los fines de semana. Este ejercicio permite evaluar la relevancia de un tema particular para la opinión pública usuaria de redes sociales y, subsecuentemente, entender su relación con eventos observados en un periodo de tiempo.
 ```
 <br>
@@ -287,23 +277,39 @@ if(params$view_html) {
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
+\newline
+
+La gráfica anterior muestra dos “picos” fuera de la tendencia observada: el miércoles 01 de abril por la noche y el domingo 06 de abril por la tarde. Este último es particularmente interesante, pues coincide en fecha y horario con el informe del presidente de la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
 \newpage
 ```
 
 # <b>Hashtags, Menciones y Temas</b> {.tabset .tabset-fade .tabset-pills}
 ***
-```{block eval=FALSE, include=params$view_html}
-Los gráficos de Hashtags, menciones y temas presentan las palabras y alusiones con mayor número de menciones en los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. El tamaño de cada palabra en la nube alude a la mayor o menor frecuencia en que fue mencionada en las publicaciones.
+
+Los gráficos de Hashtags, menciones y temas presentan las palabras y alusiones con mayor número de menciones en los tweets publicados del `r fectoprint`, relacionados al #COVID19MX. El tamaño de cada palabra en la nube alude a la mayor o menor frecuencia en que fue mencionada en las publicaciones. 
+<br>
+\newline
+```{block eval=FALSE, include=params$view_pdf}
+Este ejercicio permite conocer los verbatismos más asociados con el tema de análisis y, con ello, analizar los constructos sociales que se crean en redes sociales respecto al mismo. Asimismo, esta información permite identificar aquellas figuras públicas o autoridades, así como movimientos detrás de los hashtags, a los que más alude la población usuaria de redes sociales con el fin de comunicar su interés particular en un tema. 
+```
+\newline
+<br>
+\newline
+<br>
+```{r fig.width=9, out.width="100%", fig.height=7, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
+require(kableExtra, quietly = T)
+options(knitr.table.format = "latex")
+dt <- readRDS("01_datos/tols.rds")
+kable(dt, booktabs = T, col.names = c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"))
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-Los gráficos de Hashtags, menciones y temas presentan las palabras y alusiones con mayor número de menciones en los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. El tamaño de cada palabra en la nube alude a la mayor o menor frecuencia en que fue mencionada en las publicaciones. Este ejercicio permite conocer los verbatismos más asociados con el tema de análisis y, con ello, analizar los constructos sociales que se crean en redes sociales respecto al mismo. Asimismo, esta información permite identificar aquellas figuras públicas o autoridades, así como movimientos detrás de los hashtags, a los que más alude la población usuaria de redes sociales con el fin de comunicar su interés particular en un tema. 
+\newpage
 ```
 
 ## <b>Temas</b>
 ***
-
 ```{block eval=FALSE, include=params$view_pdf}
-Esta gráfica indica que la palabras relacionadas con las consecuencias del virus —tales como cuarentena, efecto y casos— son recurrentes en la discusión pública. También cabe destacar que “hoy” fue la palabra más mencionada —con un conteo total de 8,695—, lo anterior sugiere que las y los usuarios de Twitter están preocupados por el seguimiento diario de la evolución del tema.
+Esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus —tales como sana distancia— son recurrentes en la discusión pública. Esto es indicativo de que, al menos en esta red social, la socialización de dicha estrategia pública ha sido exitosa.
 ```
 
 ```{r fig.width=9, out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -319,7 +325,7 @@ include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 ## <b>Hashtags</b>
 ***
 ```{block eval=FALSE, include=params$view_pdf}
-Los hashtags que se relacionaron con mayor frecuencia a los tweets hacen referencia al #COVID19mx pueden dividirse en tres grandes conglomerados. Primero, aquellos relacionados con algunas entidades federativas que ya han implementado estrategias específicas. Segundo, los hashtags relacionados con las recomendaciones para contener el contagio del virus (CuarentenaNacional, QuedateEnCasa). Finalmente, términos comúnmente usados por agencias de noticias para promover su contenido.
+Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (#QuedateEnCasa, #SusanaDistancia). Cabe destacar que en esta red, respecto a semanas anteriores, estos términos incluso desplazaron la mayor presencia del #CuarentenaNacional. Lo anterior podría sustentar el éxito de esta estrategia de comunicación en redes. Asimismo, existen muy pocos hashtags relacionados con entidades federativas y sus respectivos planes de acción. Esto indica que la discusión está mayormente dirigida por y hacia las acciones del gobierno federal.
 ```
 
 ```{r fig.width=9, out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -335,7 +341,7 @@ include_graphics(path ="03_graficas/WC_hashtags_twitter.png", auto_pdf = T)
 ## <b>Menciones</b>
 ***
 ```{block eval=FALSE, include=params$view_pdf}
-Resulta interesante observar que la discusión pública en redes se relaciona fuertemente con las autoridades correspondientes. En particular, llama la atención que la jefa de gobierno Claudia Sheinbaum (4,342) y el subsecretario Hugo López-Gatell (4,292) superen la frecuencia de menciones del presidente Lopez Obrador(3923). Lo anterior pudiera ser indicativo de una atribución de responsabilidad sofisticada por parte de las y los usuarios de Twitter: no se responsabiliza o asocia en su totalidad el manejo de la crisis al jefe del ejecutivo, sino que se relaciona el manejo de la crisis con autoridades locales y/o especializadas en salud. Adicionalmente, este comportamiento es congruente con la misma estrategia de comunicación que el gobierno ha implementado en este tema. Por otro lado, el comunicador Ciro Gómez-Leyva fue puntero en la frecuencia de menciones con un total de 5,631.
+Resulta interesante observar que la discusión pública en redes se relaciona fuertemente con las autoridades correspondientes. Para el periodo de tiempo analizado, la Secretaría de Salud se posiciona como la organización más mencionada con un total de 8,226 tweets. El presidente López Obrador ocupa el segundo puesto con 3,823. Está posición del Presidente en redes, en el tema de Covid 19, puede encontrar explicación en su aparición en medios el domingo. El subsecretario López-Gatell ocupa el cuarto puesto con 2,938 menciones, rebasado por el Instituto Mexicano del Seguro Social (3,126). Vale la pena destacar que las cuentas oficiales del Gobierno de la Ciudad de México y el gobernador del estado de Jalisco (Enrique Alfaro), alcanzaron a entrar en el top 10 con 1,599 y 1,382 menciones respectivamente. 
 ```
 
 ```{r fig.width=9, out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -352,22 +358,20 @@ include_graphics(path ="03_graficas/WC_ats_twitter.png", auto_pdf = T)
 
 # <b>Análisis de Sentimiento</b>
 ***
+El gráfico de Análisis de sentimiento presenta un promedio de la orientación positiva o negativa de los tweets publicados del `r fectoprint`, relacionados al #COVID19MX. 
+<br>\newline
 ```{block eval=FALSE, include=params$view_html}
-El gráfico de Análisis de sentimiento presenta un promedio de la orientación positiva o negativa de los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. 
-<br>
 Con un sistema automatizado se asigna un puntaje a cada palabra en los tweets de la base de datos, lo cual obtiene un puntaje general por tweet. Con estos puntajes se obtiene un promedio de puntuación de los tweets por hora, y subsecuentemente construir el “sentimiento promedio” del día. El puntaje se posiciona en una escala de números reales (-∞, +∞), donde los valores positivos significan un “sentimiento promedio positivo”, los números negativos significan un “sentimiento promedio negativo” y el número cero significa un “sentimiento promedio neutral”. 
 <br>
 Cada círculo en el gráfico representa un día y su tamaño representa el volumen de tweets encontrados. La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. 
 <br>
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-El gráfico de Análisis de sentimiento presenta un promedio de la orientación positiva o negativa de los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. El texto de cada tweet puede ser positivo una vez que menciona palabras con este carácter, tales como: bueno, recuperación, cura, entre otras. 
+El texto de cada tweet puede ser positivo una vez que menciona palabras con este carácter, tales como: bueno, recuperación, cura, entre otras. 
 \newline
 Por el contrario, el texto de cada tweet puede ser negativo una vez que menciona palabras con este carácter, tales como: malo, muerte, tristeza, entre otros. Este sistema automatizado permite asignar un puntaje para cada palabra en los tweets de la base de datos, lo cual obtiene un puntaje general por tweet. Con estos puntajes se obtiene un promedio de puntuación de los tweets por hora, y subsecuentemente construir el “sentimiento promedio” del día.
 \newline
 El puntaje se posiciona en una escala de números reales $(-\infty, +\infty)$, donde los valores positivos significan un “sentimiento promedio positivo”, los números negativos significan un “sentimiento promedio negativo” y el número cero significa un “sentimiento promedio neutral”. Cada círculo en el gráfico representa un día y su tamaño representa el volumen de tweets encontrados. 
-\newline
-La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. Este tipo de ejercicio permite completar el primer análisis de lenguaje no estructurado con el fin entender los constructos y sentimientos que acompañan los textos de la opinión pública en redes sociales en un tema específico. 
 ```
 <br>
 ```{r fig.width=9,out.width="80%", fig.height=8, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Análisis de Sentimiento en Tweets sobre COVID-19 en México - Twitter"}
@@ -480,7 +484,7 @@ if(is_html_output()) {
 El siguiente gráfico presenta el número de veces en que el Emoji específico fue usado en los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX.
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-Debido a la propia extensión de un tweet, una forma no estructurada de expresión reside en las figuras que pueden acompañar el texto. Esta información se muestra en el gráfico de Emojis. Este gráfico presenta el número de veces en que el emoji específico fue usado en los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. Este ejercicio es un primer acercamiento a entender la expresión no estructurada como un termómetro de la opinión pública en redes sociales en un tema específico. 
+Debido a la propia extensión de un tweet, una forma no estructurada de expresión reside en las figuras que pueden acompañar el texto. Esta información se muestra en el gráfico de Emojis. Este gráfico presenta el número de veces en que el emoji específico fue usado en los tweets publicados del 15 al 20 de marzo de 2020, relacionados al #COVID19MX. Este ejercicio es un primer acercamiento a entender la expresión no estructurada como un termómetro de la opinión pública en redes sociales en un tema específico.
 ```
 ```{r fig.width=9, out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Emojis más comunes en Tweets sobre COVID-19 en México - Twitter"}
 `%notin%` <- Negate(`%in%`)
