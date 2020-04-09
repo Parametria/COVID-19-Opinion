@@ -32,9 +32,9 @@ params:
 ```{block eval=FALSE, include=params$view_html}
 <center>
 <div class="pill-nav">
-<a class="active" href='https://Parametria.github.io/COVID-19-Opinion/'><b>Análisis Parametría</b></a>
-<a href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Análisis Redes Sociales</b></a>
-<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Análisis Opinión Pública</b></a>
+<a class="active" href='https://Parametria.github.io/COVID-19-Opinion/'><b>Encuesta COVID-19 Parametría</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Redes Sociales</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Opinión Pública Internacional</b></a>
 </div>
 </center>
 <center>

@@ -31,8 +31,10 @@ WC_topicos_twitter <- wordcloud2(head(t_pal_mas_freq, 100),
 WC_topicos_twitter
 saveWidgetFix(WC_topicos_twitter,libdir = "graph_dependencies", selfcontained = F,
               file = "03_graficas/WC_topicos_twitter.html")
+webshot::webshot("03_graficas/WC_topicos_twitter.html","03_graficas/WC_topicos_twitter.png", 
+                 delay =5, vwidth = 1000, vheight=800)
 webshot::webshot("03_graficas/WC_topicos_twitter.html","03_graficas/WC_topicos_twitter.pdf", 
-                 delay =5, vwidth = 1000, vheight=1000)
+                 delay =5, vwidth = 1000, vheight=800)
 
 hashtags <- tweets %>% 
   select(id_str, hashtags)%>%
@@ -55,8 +57,10 @@ WC_hashtags_twitter <- wordcloud2(head(hashtags, 150),
 WC_hashtags_twitter
 saveWidgetFix(WC_hashtags_twitter,libdir = "graph_dependencies", selfcontained = F,
               file = "03_graficas/WC_hashtags_twitter.html")
+webshot::webshot("03_graficas/WC_hashtags_twitter.html","03_graficas/WC_hashtags_twitter.png", 
+                 delay =5, vwidth = 1000, vheight=800)
 webshot::webshot("03_graficas/WC_hashtags_twitter.html","03_graficas/WC_hashtags_twitter.pdf", 
-                 delay =5, vwidth = 1000, vheight=1000)
+                 delay =5, vwidth = 1000, vheight=800)
 
 
 ats <- tweets %>% 
@@ -81,8 +85,10 @@ WC_ats_twitter <- wordcloud2(head(ats, 100),
 WC_ats_twitter
 saveWidgetFix(WC_ats_twitter,libdir = "graph_dependencies", selfcontained = F,
               file = "03_graficas/WC_ats_twitter.html")
+webshot::webshot("03_graficas/WC_ats_twitter.html","03_graficas/WC_ats_twitter.png", 
+                 delay =5, vwidth = 1000, vheight=800)
 webshot::webshot("03_graficas/WC_ats_twitter.html","03_graficas/WC_ats_twitter.pdf", 
-                 delay =5, vwidth = 1000, vheight=1000)
+                 delay =5, vwidth = 1000, vheight=800)
 
 
 headfreq <- head(t_pal_mas_freq, 20)
