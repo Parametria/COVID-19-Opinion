@@ -74,6 +74,7 @@ require(RColorBrewer, quietly = T)
 require(tidyverse, quietly = T)
 require(htmlwidgets, quietly = T)
 require(knitr, quietly = T)
+require(translateR, quietly = T)
 
 load.emojifont("OpenSansEmoji.ttf")
 load.emojifont("EmojiOne.ttf")
@@ -130,8 +131,8 @@ tweets <- readRDS("01_datos/covid_6Mar20.rds") %>%
                             replacement = ""),
     fecha = as.POSIXct(created, 
                        format = "%Y-%m-%d %T") - hours(7),
-   RT = stri_detect(text, fixed = "RT"),
-   replied_TO = ifelse(RT, stri_extract_first(text, regex = "@[[:alnum:]_]+"), "")
+    RT = stri_detect(text, fixed = "RT"),
+    replied_TO = ifelse(RT, stri_extract_first(text, regex = "@[[:alnum:]_]+"), "")
   ) %>% filter(fecha>as.POSIXct("2020-03-31", format = "%Y-%m-%d"))
 
 saveRDS(tweets, "01_datos/tweets.rds")
@@ -180,17 +181,17 @@ Es importante remarcar que los tweets tienen ciclos normales de creación determ
 titulo <- "Frecuencia de tweets que mencionan al #COVID19mx"
 subtitulo <- paste0("Tweets agrupados por hora del 15 de marzo al ", as.Date(max(tweets$fecha)))
 tweets_sum <- tweets %>%
-         group_by(month = month(fecha),day = day(fecha), hour = hour(fecha)) %>%
-         summarise(`Número de Tweets` = n(), 
-                   retweets = sum(as.numeric(retweet_count), na.rm = T ))%>%
-         mutate(Fecha= as.POSIXct(paste0(month," " ,day, " ", hour), format = "%m %d %H"))
+  group_by(month = month(fecha),day = day(fecha), hour = hour(fecha)) %>%
+  summarise(`Número de Tweets` = n(), 
+            retweets = sum(as.numeric(retweet_count), na.rm = T ))%>%
+  mutate(Fecha= as.POSIXct(paste0(month," " ,day, " ", hour), format = "%m %d %H"))
 
 
 ur <- ggplot(data = tweets_sum, 
-       aes(size = `Número de Tweets`,
-           y = `Número de Tweets`,
-           color = `Número de Tweets`,
-           x = Fecha)) +
+             aes(size = `Número de Tweets`,
+                 y = `Número de Tweets`,
+                 color = `Número de Tweets`,
+                 x = Fecha)) +
   geom_smooth(method = "loess",
               show.legend = F,
               colour="black") +
@@ -204,7 +205,7 @@ ur <- ggplot(data = tweets_sum,
        y="Número de tweets",
        x="",
        caption=caption1)+
-   theme(plot.title = element_text(size = 35),
+  theme(plot.title = element_text(size = 35),
         plot.subtitle = element_text(size = 25),
         plot.caption = element_text(size = 20),
         axis.title.x = element_text(size = 20),
@@ -215,14 +216,14 @@ ggsave("03_graficas/linea_tiempo_tweets.pdf", plot = ur,
        width = 15, height = 10, dpi = 100)
 
 ur <- ggplot(data = tweets %>%
-         group_by(month = month(fecha),day = day(fecha), hour = hour(fecha)) %>%
-         summarise(`Número de Tweets` = n(), 
-                   retweets = sum(as.numeric(retweet_count), na.rm = T ))%>%
-         mutate(Fecha= as.POSIXct(paste0(month," " ,day, " ", hour), format = "%m %d %H")), 
-       aes(size = `Número de Tweets`,
-           y = `Número de Tweets`,
-           color = `Número de Tweets`,
-           x = Fecha)) +
+               group_by(month = month(fecha),day = day(fecha), hour = hour(fecha)) %>%
+               summarise(`Número de Tweets` = n(), 
+                         retweets = sum(as.numeric(retweet_count), na.rm = T ))%>%
+               mutate(Fecha= as.POSIXct(paste0(month," " ,day, " ", hour), format = "%m %d %H")), 
+             aes(size = `Número de Tweets`,
+                 y = `Número de Tweets`,
+                 color = `Número de Tweets`,
+                 x = Fecha)) +
   geom_point() +
   scale_color_continuous(NULL, NULL, NULL)+
   scale_size(NULL, NULL, NULL)+
@@ -233,7 +234,7 @@ ur <- ggplot(data = tweets %>%
        y="Número de tweets",
        x="",
        caption=caption1) +
-   theme(plot.title = element_text(size = 20),
+  theme(plot.title = element_text(size = 20),
         plot.subtitle = element_text(size = 15),
         plot.caption = element_text(size = 10),
         axis.title.x = element_text(size = 10),
@@ -241,28 +242,28 @@ ur <- ggplot(data = tweets %>%
         axis.text.x = element_text(angle = 45))
 
 plotly <- ggplotly(ur, 
-                           tooltip = c("x", "y"),
-                           dynamicTicks = TRUE
-                           )%>%
+                   tooltip = c("x", "y"),
+                   dynamicTicks = TRUE
+)%>%
   rangeslider() %>%
   layout(title = list(text = paste0(titulo,
                                     '<br>',
                                     '<sup>',
                                     subtitulo,
                                     '</sup>'),
-                              y = 1.1),
-                 hovermode = "x", 
-                 tickvalues ="", 
-                 annotations = list(x = 1, y = 0, 
-                                    text = caption, 
-                                    showarrow = F, 
-                                    xref='paper', 
-                                    yref='paper', 
-                                    xanchor='right', 
-                                    yanchor='auto', 
-                                    xshift=0, 
-                                    yshift=0,
-                                    font=list(size=15, color="red")))
+                      y = 1.1),
+         hovermode = "x", 
+         tickvalues ="", 
+         annotations = list(x = 1, y = 0, 
+                            text = caption, 
+                            showarrow = F, 
+                            xref='paper', 
+                            yref='paper', 
+                            xanchor='right', 
+                            yanchor='auto', 
+                            xshift=0, 
+                            yshift=0,
+                            font=list(size=15, color="red")))
 
 saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F, file="03_graficas/linea_tiempo_tweets.html")
 
@@ -304,17 +305,17 @@ kable(dt, booktabs = T, col.names = c("Hashtags","Tweets","Temas", "Tweets", "Ar
 ```
 ```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE}
 DT::datatable(dt, 
-                class= "cell-border stripe", 
-                rownames = F,
-                colnames=c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"),
-                filter = "top",
-                extensions = "Buttons", 
-                width = "100%",
-                options = list(dom="Bfrtip", 
-                               pageLength = 10,scrollX = T,
-                               buttons = c("copy", "excel"), 
-                                autowidth = T)
-  )%>%
+              class= "cell-border stripe", 
+              rownames = F,
+              colnames=c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"),
+              filter = "top",
+              extensions = "Buttons", 
+              width = "100%",
+              options = list(dom="Bfrtip", 
+                             pageLength = 10,scrollX = T,
+                             buttons = c("copy", "excel"), 
+                             autowidth = T)
+)%>%
   DT::formatStyle(columns = c(1:8), fontSize = '8pt')%>%DT::formatStyle(columns = 8, fontSize = '4pt')
 ```
 
@@ -399,29 +400,6 @@ asce <- afinn %>% distinct(root, .keep_all = T)%>%
   select(-Palabra)%>%arrange(Puntuacion)
 ```
 
-## Diez palabras positivas y 10 negativas
-Ejemplo de Diccionario para Sentimiento
-```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_pdf, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
-dt <- bind_cols(head(asce%>%mutate(Puntuacion = round(Puntuacion, 1)), 10), head(desc%>%mutate(Puntuacion = round(Puntuacion, 1)), 10))
-kable(dt, booktabs = T, col.names = c("Positivas","Puntuación","Negativas", "Puntuación"))
-```
-```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE}
-DT::datatable(dt, 
-                class= "cell-border stripe", 
-                rownames = F,
-                colnames=c("Positivas","Puntuación","Negativas", "Puntuación"),
-                filter = "top",
-                extensions = "Buttons", 
-                width = "100%",
-                options = list(dom="Bfrtip", 
-                               pageLength = 10,scrollX = T,
-                               buttons = c("copy", "excel"), 
-                                autowidth = T)
-  )%>%
-  DT::formatStyle(columns = c(0:3), fontSize = '8pt')
-```
-
-
 ```{r out.width="80%", fig.height=8, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Análisis de Sentimiento en Tweets sobre COVID-19 en México - Twitter"}
 general_afinn <- tweets%>%select(id_str, texto, fecha)%>%
   mutate(id = 1:length(texto),
@@ -448,10 +426,10 @@ subtitulo1 <- "Cada círculo representa un día; el tamaño del círculo indica 
 subtitulo <- "Cada círculo representa un día; el tamaño del círculo indica la cantidad de tweets encontrados por día. <br>Una puntuación mayor a cero representa un sentimiento promedio positivo; una menor, un negativo."
 
 ur <- ggplot(general_afinn ,
-       aes(x = Fecha,
-           y = puntuacion,
-           col = colour,
-           size=`Número de tweets`)) +
+             aes(x = Fecha,
+                 y = puntuacion,
+                 col = colour,
+                 size=`Número de tweets`)) +
   geom_point()+
   scale_x_datetime(date_breaks = "1 day", date_labels =  "%b/%d %I%p")+
   scale_color_manual(values = c("#FC4E07", "grey",  "#00AFBB")) +
@@ -481,14 +459,9 @@ ggsave(filename = "03_graficas/linea_tiempo_sentimiento_tweets.pdf",plot = ur + 
 plotly <- plotly::ggplotly(ur, 
                            tooltip = c("x", "y", "size"),
                            dynamicTicks = TRUE
-                           )%>%
+)%>%
   plotly::rangeslider() %>%
-  plotly::layout(title = list(text = paste0(titulo,
-                                    '<br>',
-                                    '<sup><sup>',
-                                    subtitulo,
-                                    '</sup></sup>'),
-                              y = 1.3, size = 3),
+  plotly::layout(title = "",
                  hovermode = "x", 
                  tickvalues ="", 
                  legend = list(orientation = 'v', x=1, y=.5),
@@ -516,8 +489,30 @@ if(is_html_output()) {
 
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
-\newpage
 ```
+
+## Diez palabras positivas y 10 negativas
+Ejemplo de Diccionario para Sentimiento
+```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_pdf, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
+dt <- bind_cols(head(asce%>%mutate(Puntuacion = round(Puntuacion, 1))%>%filter(Palabra != "coño", Palabra != "polla"), 10), head(desc%>%mutate(Puntuacion = round(Puntuacion, 1)), 10))
+kable(dt, booktabs = T, col.names = c("Negativas","Puntuación","Positivas", "Puntuación"))
+```
+```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE}
+DT::datatable(dt, 
+              class= "cell-border stripe", 
+              rownames = F,
+              colnames=c("Positivas","Puntuación","Negativas", "Puntuación"),
+              filter = "top",
+              extensions = "Buttons", 
+              width = "100%",
+              options = list(dom="Bfrtip", 
+                             pageLength = 10,scrollX = T,
+                             buttons = c("copy", "excel"), 
+                             autowidth = T)
+)%>%
+  DT::formatStyle(columns = c(0:3), fontSize = '8pt')
+```
+\newpage
 
 # <b>¡Emojis!</b>
 ***
@@ -533,8 +528,8 @@ Este ejercicio es un primer acercamiento a entender la expresión no estructurad
 ```{r  out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Emojis más comunes en Tweets sobre COVID-19 en México - Twitter"}
 `%notin%` <- Negate(`%in%`)
 
-  if(!file.exists("01_datos/emojis.rds")){
-    emojis <- tweets %>% select(id_str, emojis)%>%unnest(cols = emojis)%>%
+if(!file.exists("01_datos/emojis.rds")){
+  emojis <- tweets %>% select(id_str, emojis)%>%unnest(cols = emojis)%>%
     drop_na() %>%group_by(emojis) %>% summarise(n = n()) %>% arrange(desc(n))%>%
     filter(is.na(as.numeric(emojis)),!str_detect(emojis, "#"),emojis %notin% c("*","!!","‼"))
   
@@ -549,10 +544,21 @@ Este ejercicio es un primer acercamiento a entender la expresión no estructurad
       html_node('div[class="vendor-image"] img') %>%
       html_attr("src")
   }
+  emoji_to_description <- function(x) {
+    paste0("https://emojipedia.org/emoji/",x) %>%
+      read_html() %>%
+      html_nodes("tr td a") %>%
+      .[1] %>%
+      html_attr("href") %>%
+      paste0("https://emojipedia.org/", .) %>%
+      read_html() %>%
+      html_node('section[class="description"]') %>%
+      html_text()
+  }
   link_to_img <- function(x, size = 25) {
     paste0("<img src='", x, "' width='", size, "'/>")
   }
-  thead_emojis <- head(emojis, 20)%>%
+  thead_emojis <- head(emojis, 30)%>%
     mutate(ems1 = stri_extract_all(emojis, regex = "\\p{Emoji_Presentation}"),
            ems1 = map(ems1, unique), 
            len = as.double(map(ems1, length)),
@@ -575,28 +581,40 @@ Este ejercicio es un primer acercamiento a entender la expresión no estructurad
            finalems = ifelse(ifelse(is.na(len), F, len == 1), ems1, finalems),
            finalems = ifelse(countif>1, emojis, finalems),
            finalems = ifelse(is.na(finalems), ifelse(countif==1, ems3, finalems), finalems),
-           )%>%
+    )%>%
     transmute(family = ifelse(is.na(ems4), "OpenSansEmoji" , "EmojiOne"),
               emojis = finalems,
               n = n)
   
   thead_emojis <- thead_emojis %>%
     mutate(url = map_chr(emojis, slowly(~plyr::try_default(emoji_to_link(.x), NA, quiet = T), rate_delay(1))),
+           descr = map_chr(emojis, slowly(~plyr::try_default(emoji_to_description(.x), NA, quiet = T), rate_delay(1))),
            label = link_to_img(url))
   
   thead_emojis <- thead_emojis%>%
     mutate(emojis = ifelse(is.na(url),stri_extract_all(emojis, regex = "\\p{Emoji_Presentation}"), emojis))%>%
     unnest(emojis)%>%
     mutate(url = ifelse(is.na(url),map_chr(emojis, slowly(~plyr::try_default(emoji_to_link(.x), NA), rate_delay(1))), url),
+           descr = ifelse(is.na(descr),map_chr(emojis, slowly(~plyr::try_default(emoji_to_description(.x), NA), rate_delay(1))), descr),
            label = link_to_img(url),
-           `Número de Tweets`=n)
+           `Número de Tweets`=n
+           )
+  
+  key <- jsonlite::read_json("apikey/contraseñaTranslateEmojis.json")
+  thead_emojis <- translate(dataset = thead_emojis,content.field = "descr", google.api.key = key$key, source.lang = "en", target.lang = "es") %>%
+    mutate(
+      descr = stri_replace_last(translatedContent, fixed = " Copie y pegue este emoji: Copiar", ""),
+      descr = descr = gsub('&quot;', '', descr)
+    ) %>% select(-translatedContent)
+  
   saveRDS(thead_emojis, "01_datos/emojis.rds")
-  } else {
+} else {
   thead_emojis <- readRDS("01_datos/emojis.rds")
 }
+data_emojis <- thead_emojis%>%group_by(emojis)%>%summarise_all(~ifelse(is.numeric(.), sum(.), max(.)))
 
 titulo <- "Emojis más usados en menciones de COVID-19 en Twitter"
-ur1 <-  ggplot(thead_emojis%>%distinct(emojis, .keep_all = T), aes(x=reorder(emojis,desc(`Número de Tweets`) ), y=`Número de Tweets`, fill = emojis,  label = label, family = family)) + 
+ur1 <-  ggplot(head(data_emojis,20), aes(x=reorder(emojis,desc(`Número de Tweets`) ), y=`Número de Tweets`, fill = emojis,  label = label, family = family)) + 
   geom_bar(stat = "identity") +
   geom_richtext(label.color = NA, label.padding = grid::unit(rep(0, 4), "pt"),  size = 5, vjust = 1) +
   scale_fill_discrete(NULL, NULL, NULL)+
@@ -613,13 +631,14 @@ ggsave(filename = "03_graficas/04_emojis_twitter.pdf",plot = ur1,
        width = 15, height = 10, dpi = 100)
 
 subtitulo <- paste0("#COVID19mx Tweets del 15 de marzo al ", as.Date(max(tweets$fecha)))
-data_emojis <- thead_emojis%>%distinct(emojis, .keep_all = T)
-ur2 <- ggplot(data_emojis, 
-             aes(x=reorder(emojis,desc(`Número de Tweets`)),
-                 y=`Número de Tweets`, 
-                 fill = emojis, 
-                 label = emojis, 
-                 family = family)) + 
+
+ur2 <- ggplot(head(data_emojis,20), 
+              aes(x=reorder(emojis,desc(`Número de Tweets`)),
+                  y=`Número de Tweets`, 
+                  fill = emojis, 
+                  label = emojis, 
+                  text = str_wrap(descr,30),
+                  family = family)) + 
   geom_bar(stat = "identity") +
   geom_text(size = 5, vjust = 1) +
   guides(fill = F)+
@@ -635,15 +654,9 @@ ur2 <- ggplot(data_emojis,
         legend.position = "none")
 
 plotly <- plotly::ggplotly(ur2, 
-                           tooltip = c("label", "y")
-                           )%>%
-  plotly::layout(title = list(text = paste0(titulo,
-                                    '<br>',
-                                    '<sup>',
-                                    subtitulo,
-                                    '</sup>'),
-                              y = 1.1),
-                 tickvalues ="", 
+                           tooltip = c("label", "y", "text")
+)%>%
+  plotly::layout(title = "",
                  annotations = list(x = 1, y = 0, 
                                     text = caption, 
                                     showarrow = F, 
