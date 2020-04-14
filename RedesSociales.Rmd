@@ -174,11 +174,13 @@ if(maxmonth == minmonth){
 }
 
 ```
-Los datos sobre tweets hasta `r max(tweets$fecha)` tienen `r nrow(tweets)` tweets y `r ncol(tweets)` variables.
+Los datos sobre tweets hasta `r max(tweets$fecha)` tienen `r nrow(tweets)` tweets.
 
 El gráfico de Tiempo presenta el número de tweets que mencionan el #COVID19MX. Estos tweets se muestran según la hora de su publicación desde el `r fectoprint` de `r format(min(tweets$fecha),"%Y")`.
 
 Es importante remarcar que los tweets tienen ciclos normales de creación determinado por las horas de descanso, así como la escalada esperada en los fines de semana. Este ejercicio permite evaluar la relevancia de un tema particular para la opinión pública usuaria de redes sociales y, subsecuentemente, entender su relación con eventos observados en un periodo de tiempo.
+
+La gráfica muestra dos “picos” fuera de la tendencia observada: el miércoles 01 de abril por la noche y el domingo 06 de abril por la tarde. El primero corresponde con el momento en el que el gobierno formalizó la jornada de sana distancia —es decir, pidió a las y los ciudadanos quedarse en casa— hasta el 30 de abril. El segundo coincide en fecha y horario con el informe del presidente de la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
 
 ```{block eval=FALSE, include=params$view_html}
 La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. 
@@ -283,8 +285,7 @@ if(params$view_html) {
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
 \newline
-
-La gráfica anterior muestra dos “picos” fuera de la tendencia observada: el miércoles 01 de abril por la noche y el domingo 06 de abril por la tarde. Este último es particularmente interesante, pues coincide en fecha y horario con el informe del presidente de la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
+La gráfica anterior muestra dos “picos” fuera de la tendencia observada: el miércoles 01 de abril por la noche y el domingo 06 de abril por la tarde. El primero corresponde con el momento en el que el gobierno formalizó la jornada de sana distancia —es decir, pidió a las y los ciudadanos quedarse en casa— hasta el 30 de abril. El segundo coincide en fecha y horario con el informe del presidente de la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
 \newpage
 ```
 
@@ -708,7 +709,11 @@ if(is_html_output()) {
 ```{block eval=FALSE, include=params$view_html}
 # Info
 ***
-Revise el acervo histórico de reportes [\underline{aquí}](https://github.com/Parametria/COVID-19-Opinion/archivo_historico).
+Revise el acervo histórico de reportes [aquí](https://github.com/Parametria/COVID-19-Opinion/archivo_historico).
+
+<br>
+Consulta el artículo publicado en Milenio por nuestro director, Francisco Abundis 
+[aquí](https://www.milenio.com/opinion/francisco-abundis/columna-francisco-abundis/redes-sociales-en-epoca-de-pandemia)
 
 <br>
 Descargue el archivo RMarkdown para crear este reporte aquí
@@ -718,4 +723,7 @@ También puedes descargar el tema de este Rmd [aquí](https://holtzy.github.io/P
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/Parametria/COVID-19-Opinion).
+
+Consulta el artículo publicado en Milenio por nuestro director, Francisco Abundis 
+[\underline{aquí}](https://www.milenio.com/opinion/francisco-abundis/columna-francisco-abundis/redes-sociales-en-epoca-de-pandemia)
 ```
