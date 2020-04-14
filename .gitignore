@@ -5,3 +5,5 @@
 01_datos/tweets.rds
 01_datos/covid_6Mar20.rds
 apikey/contraseñaTranslateEmojis.json
+01_datos/prop_internet.rds
+02_scripts/prop_usuarios_internet.R
