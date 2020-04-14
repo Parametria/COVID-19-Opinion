@@ -64,7 +64,7 @@ El presente trabajo se realiza con interfaces basadas en la API de Twitter, dond
 \newpage
 <br>
 ```{r echo=F, background="white", message = FALSE, warning = FALSE}
-extrafont::loadfonts(device="win")
+#extrafont::loadfonts(device="win")
 require(rvest, quietly = T)
 ## remotes::install_github("wilkelab/ggtext")
 require(ggtext, quietly = T)
@@ -184,7 +184,7 @@ Es importante remarcar que los tweets tienen ciclos normales de creación determ
 La imagen inferior que acompaña el gráfico permite elegir la temporalidad específica de su interés. 
 ```
 <br>
-```{r  out.width="80%", fig.height=7, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Línea de Tiempo de Tweets sobre COVID-19 en México - Twitter"}
+```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Línea de Tiempo de Tweets sobre COVID-19 en México - Twitter"}
 
 titulo <- "Frecuencia de tweets que mencionan al #COVID19mx"
 subtitulo <- paste0("Tweets agrupados por hora del 15 de marzo al ", as.Date(max(tweets$fecha)))
@@ -254,11 +254,7 @@ plotly <- ggplotly(ur,
                    dynamicTicks = TRUE
 )%>%
   rangeslider() %>%
-  layout(title = list(text = paste0(titulo,
-                                    '<br>',
-                                    '<sup>',
-                                    subtitulo,
-                                    '</sup>'),
+  layout(title = list(text = "",
                       y = 1.1),
          hovermode = "x", 
          tickvalues ="", 
@@ -297,7 +293,7 @@ La gráfica anterior muestra dos “picos” fuera de la tendencia observada: el
 
 Los gráficos de Hashtags, menciones y temas presentan las palabras y alusiones con mayor número de menciones en los tweets publicados del `r fectoprint`, relacionados al #COVID19MX. El tamaño de cada palabra en la nube alude a la mayor o menor frecuencia en que fue mencionada en las publicaciones. 
 <br>
-\newline
+
 ```{block eval=FALSE, include=params$view_pdf}
 Este ejercicio permite conocer los verbatismos más asociados con el tema de análisis y, con ello, analizar los constructos sociales que se crean en redes sociales respecto al mismo. Asimismo, esta información permite identificar aquellas figuras públicas o autoridades, así como movimientos detrás de los hashtags, a los que más alude la población usuaria de redes sociales con el fin de comunicar su interés particular en un tema. 
 ```
@@ -337,7 +333,7 @@ DT::datatable(dt,
 Esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus —tales como sana distancia— son recurrentes en la discusión pública. Esto es indicativo de que, al menos en esta red social, la socialización de dicha estrategia pública ha sido exitosa.
 ```
 
-```{r  out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
+```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
 include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
@@ -352,13 +348,12 @@ include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 
 <b>Definición:</b> <i>Es una etiqueta de metadatos precedida de un carácter especial (normalmente un numeral #) con el fin de ser identificada de forma rápida. Se usa en servicios web tales como Twitter, Telegram, FriendFeed, Facebook, Google+, Instagram, Weibo para señalar o hacer hincapié en un tema sobre el que gira cierta conversación.</i>
 \newline
-
-
+<br>
 ```{block eval=FALSE, include=params$view_pdf}
 Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (#QuedateEnCasa, #SusanaDistancia). Cabe destacar que en esta red, respecto a semanas anteriores, estos términos incluso desplazaron la mayor presencia del #CuarentenaNacional. Lo anterior podría sustentar el éxito de esta estrategia de comunicación en redes. Asimismo, existen muy pocos hashtags relacionados con entidades federativas y sus respectivos planes de acción. Esto indica que la discusión está mayormente dirigida por y hacia las acciones del gobierno federal.
 ```
 
-```{r out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
+```{r out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
 include_graphics(path ="03_graficas/WC_hashtags_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
@@ -373,13 +368,12 @@ include_graphics(path ="03_graficas/WC_hashtags_twitter.png", auto_pdf = T)
 
 <b>Definición:</b> <i>Es una etiqueta de metadatos precedida de un carácter especial (normalmente una arroba @) con el fin de relacionar a un usuario específico en una conversación y notificarlo de la misma. Se usa en servicios web tales como Twitter, Telegram, FriendFeed, Facebook, Google+, Instagram, Weibo para establecer relación entre una conversación y un usuario o para marcar la respuesta hacia un mensaje específico de un usuario.</i>
 \newline
-
-
+<br>
 ```{block eval=FALSE, include=params$view_pdf}
 Resulta interesante observar que la discusión pública en redes se relaciona fuertemente con las autoridades correspondientes. Para el periodo de tiempo analizado, la Secretaría de Salud se posiciona como la organización más mencionada con un total de 8,226 tweets. El presidente López Obrador ocupa el segundo puesto con 3,823. Está posición del Presidente en redes, en el tema de Covid 19, puede encontrar explicación en su aparición en medios el domingo. El subsecretario López-Gatell ocupa el cuarto puesto con 2,938 menciones, rebasado por el Instituto Mexicano del Seguro Social (3,126). Vale la pena destacar que las cuentas oficiales del Gobierno de la Ciudad de México y el gobernador del estado de Jalisco (Enrique Alfaro), alcanzaron a entrar en el top 10 con 1,599 y 1,382 menciones respectivamente. 
 ```
 
-```{r  out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
+```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
 include_graphics(path ="03_graficas/WC_ats_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
@@ -387,14 +381,14 @@ include_graphics(path ="03_graficas/WC_ats_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_menciones_twitter.pdf)
-\newpage
 ```
-
+\newpage
 
 # <b>Análisis de Sentimiento</b>
 ***
 El gráfico de Análisis de sentimiento presenta un promedio de la orientación positiva o negativa de los tweets publicados del `r fectoprint`, relacionados al #COVID19MX. 
-<br>\newline
+\newline
+<br>
 ```{block eval=FALSE, include=params$view_html}
 Con un sistema automatizado se asigna un puntaje a cada palabra en los tweets de la base de datos, lo cual obtiene un puntaje general por tweet. Con estos puntajes se obtiene un promedio de puntuación de los tweets por hora, y subsecuentemente construir el “sentimiento promedio” del día. El puntaje se posiciona en una escala de números reales (-∞, +∞), donde los valores positivos significan un “sentimiento promedio positivo”, los números negativos significan un “sentimiento promedio negativo” y el número cero significa un “sentimiento promedio neutral”. 
 <br>
@@ -402,7 +396,7 @@ Cada círculo en el gráfico representa un día y su tamaño representa el volum
 <br>
 ```
 ```{block eval=FALSE, include=params$view_pdf}
-El texto de cada tweet puede ser positivo una vez que menciona palabras con este carácter, tales como: bueno, recuperación, cura, entre otras. 
+El texto de cada tweet puede ser positivo una vez que menciona palabras con este carácter, tales como: bueno, recuperación, cura, entre otras.
 \newline
 Por el contrario, el texto de cada tweet puede ser negativo una vez que menciona palabras con este carácter, tales como: malo, muerte, tristeza, entre otros. Este sistema automatizado permite asignar un puntaje para cada palabra en los tweets de la base de datos, lo cual obtiene un puntaje general por tweet. Con estos puntajes se obtiene un promedio de puntuación de los tweets por hora, y subsecuentemente construir el “sentimiento promedio” del día.
 \newline
@@ -418,7 +412,7 @@ asce <- afinn %>% distinct(root, .keep_all = T)%>%
   select(-Palabra)%>%arrange(Puntuacion)
 ```
 
-```{r out.width="80%", fig.height=8, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Análisis de Sentimiento en Tweets sobre COVID-19 en México - Twitter"}
+```{r out.width="100%", fig.height=8, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Análisis de Sentimiento en Tweets sobre COVID-19 en México - Twitter"}
 general_afinn <- tweets%>%select(id_str, texto, fecha)%>%
   mutate(id = 1:length(texto),
          id = formatC(id, width = 3, format="d", flag="0")) %>% 
@@ -504,15 +498,16 @@ if(is_html_output()) {
 ```{block eval=FALSE, include=params$view_html}
 [Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.html)
 ```
-
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
+
 ```
+\newpage
 
 ## Diez palabras positivas y 10 negativas
 Ejemplo de Diccionario para Sentimiento
 ```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_pdf, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
-dt <- bind_cols(head(asce%>%mutate(Puntuacion = round(Puntuacion, 1))%>%filter(Palabra != "coño", Palabra != "polla"), 10), head(desc%>%mutate(Puntuacion = round(Puntuacion, 1)), 10))
+dt <- bind_cols(head(asce%>%mutate(Puntuacion = round(Puntuacion, 1))%>%filter(root != "coño", root != "polla"), 10), head(desc%>%mutate(Puntuacion = round(Puntuacion, 1)), 10))
 kable(dt, booktabs = T, col.names = c("Negativas","Puntuación","Positivas", "Puntuación"))
 ```
 ```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE}
@@ -543,7 +538,7 @@ Este gráfico presenta el número de veces en que el emoji específico fue usado
 Este ejercicio es un primer acercamiento a entender la expresión no estructurada como un termómetro de la opinión pública en redes sociales en un tema específico.
 ```
 
-```{r  out.width="80%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Emojis más comunes en Tweets sobre COVID-19 en México - Twitter"}
+```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Emojis más comunes en Tweets sobre COVID-19 en México - Twitter"}
 `%notin%` <- Negate(`%in%`)
 
 if(!file.exists("01_datos/emojis.rds")){
@@ -628,7 +623,14 @@ if(!file.exists("01_datos/emojis.rds")){
   saveRDS(thead_emojis, "01_datos/emojis.rds")
 } else {
   thead_emojis <- readRDS("01_datos/emojis.rds")
+  thead_emojis2 <- read_csv("01_datos/emojis.csv")
+  thead_emojis$descr <- thead_emojis2$descr
+  thead_emojis <- thead_emojis%>%
+    mutate(
+      descr = stri_replace_all(descr, regex= "\\<U\\+[:alnum:]+\\>", "")
+    )
 }
+
 data_emojis <- thead_emojis%>%group_by(emojis)%>%summarise_all(~ifelse(is.numeric(.), sum(.), max(.)))
 
 titulo <- "Emojis más usados en menciones de COVID-19 en Twitter"
