@@ -515,7 +515,7 @@ kable(dt, booktabs = T, col.names = c("Negativas","Puntuación","Positivas", "Pu
 DT::datatable(dt, 
               class= "cell-border stripe", 
               rownames = F,
-              colnames=c("Positivas","Puntuación","Negativas", "Puntuación"),
+              colnames=c("Negativas","Puntuación","Positivas", "Puntuación"),
               filter = "top",
               extensions = "Buttons", 
               width = "100%",
