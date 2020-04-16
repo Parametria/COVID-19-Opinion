@@ -1,7 +1,7 @@
 ---
 title: "Análisis de Opinión Pública en México"
-author: "[Parametría](http://parametria.com.mx/)"
-date: "`r format(Sys.time(), '%d/%m/%Y')`"
+author: "<center>[Parametría](http://parametria.com.mx/)</center>"
+date: "<center>`r format(Sys.time(), '%d/%m/%Y')`</center>"
 github: "Parametria/COVID-19-Opinion"
 logo: "logo_gallery.png"
 mail: lorenzoln@parametria.com.mx
