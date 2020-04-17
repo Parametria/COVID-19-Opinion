@@ -255,7 +255,7 @@ ur <- ggplot(data = tweets %>%
 
 
 if(params$view_html) {
-    plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+    plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  
                      tooltip = c("x", "y"),
                      dynamicTicks = TRUE
   )%>%
@@ -473,7 +473,7 @@ ggsave(filename = "03_graficas/linea_tiempo_sentimiento_tweets.pdf",plot = ur + 
 
 
 if(is_html_output()) {
-    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  
                              tooltip = c("x", "y", "size"),
                              dynamicTicks = TRUE
   )%>%
@@ -680,7 +680,7 @@ ur2 <- ggplot(head(data_emojis,20),
 
 
 if(is_html_output()) {
-    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),tooltip = c("label", "y", "text"))%>%
+    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  tooltip = c("label", "y", "text"))%>%
     plotly::layout(title = "",
                    annotations = list(x = 1, y = 0, 
                                       text = caption, 
