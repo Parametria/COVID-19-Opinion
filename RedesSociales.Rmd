@@ -84,6 +84,7 @@ require(tidyverse, quietly = T)
 require(htmlwidgets, quietly = T)
 require(knitr, quietly = T)
 require(translateR, quietly = T)
+require(htmltools, quietly = T)
 
 load.emojifont("OpenSansEmoji.ttf")
 load.emojifont("EmojiOne.ttf")
@@ -251,30 +252,31 @@ ur <- ggplot(data = tweets %>%
         axis.text.y = element_text(size = 10),
         axis.text.x = element_text(angle = 45))
 
-plotly <- ggplotly(ur, 
-                   tooltip = c("x", "y"),
-                   dynamicTicks = TRUE
-)%>%
-  rangeslider() %>%
-  layout(title = list(text = "",
-                      y = 1.1),
-         hovermode = "x", 
-         tickvalues ="", 
-         annotations = list(x = 1, y = 0, 
-                            text = caption, 
-                            showarrow = F, 
-                            xref='paper', 
-                            yref='paper', 
-                            xanchor='right', 
-                            yanchor='auto', 
-                            xshift=0, 
-                            yshift=0,
-                            font=list(size=15, color="red")))
 
-saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F, file="03_graficas/linea_tiempo_tweets.html")
 
 if(params$view_html) {
-  plotly
+    plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  
+                     tooltip = c("x", "y"),
+                     dynamicTicks = TRUE
+  )%>%
+    rangeslider() %>%
+    layout(title = list(text = "",
+                        y = 1.1),
+           hovermode = "x", 
+           tickvalues ="", 
+           annotations = list(x = 1, y = 0, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F, file="03_graficas/linea_tiempo_tweets.html")
+  div(plotly, class="myplot", align = "center")
 } else if(params$view_pdf ){
   include_graphics(path ="03_graficas/linea_tiempo_tweets.png", auto_pdf = T)
 }
@@ -469,28 +471,29 @@ ur <- ggplot(general_afinn ,
 ggsave(filename = "03_graficas/linea_tiempo_sentimiento_tweets.pdf",plot = ur + geom_smooth(method="loess", show.legend = F, colour="black") + geom_point(),
        width = 15, height = 10, dpi = 100)
 
-plotly <- plotly::ggplotly(ur, 
-                           tooltip = c("x", "y", "size"),
-                           dynamicTicks = TRUE
-)%>%
-  plotly::rangeslider() %>%
-  plotly::layout(title = "",
-                 hovermode = "x", 
-                 tickvalues ="", 
-                 legend = list(orientation = 'v', x=1, y=.5),
-                 annotations = list(x = 1, y = 0, 
-                                    text = caption, 
-                                    showarrow = F, 
-                                    xref='paper', 
-                                    yref='paper', 
-                                    xanchor='right', 
-                                    yanchor='auto', 
-                                    xshift=0, 
-                                    yshift=0,
-                                    font=list(size=15, color="red")))
-saveWidgetFix(plotly,selfcontained = F, file="03_graficas/linea_tiempo_sentimiento_tweets.html")
+
 if(is_html_output()) {
-  plotly
+    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  
+                             tooltip = c("x", "y", "size"),
+                             dynamicTicks = TRUE
+  )%>%
+    plotly::rangeslider() %>%
+    plotly::layout(title = "",
+                   hovermode = "x", 
+                   tickvalues ="", 
+                   legend = list(orientation = 'v', x=1, y=.5),
+                   annotations = list(x = 1, y = 0, 
+                                      text = caption, 
+                                      showarrow = F, 
+                                      xref='paper', 
+                                      yref='paper', 
+                                      xanchor='right', 
+                                      yanchor='auto', 
+                                      xshift=0, 
+                                      yshift=0,
+                                      font=list(size=15, color="red")))
+  saveWidgetFix(plotly,selfcontained = F, file="03_graficas/linea_tiempo_sentimiento_tweets.html")
+  div(plotly, class="myplot", align = "center")
 } else if(is_latex_output()) {
   include_graphics(path ="03_graficas/linea_tiempo_sentimiento_tweets.pdf")
 }
@@ -515,7 +518,7 @@ kable(dt, booktabs = T, col.names = c("Negativas","Puntuación","Positivas", "Pu
 DT::datatable(dt, 
               class= "cell-border stripe", 
               rownames = F,
-              colnames=c("Positivas","Puntuación","Negativas", "Puntuación"),
+              colnames=c("Negativas","Puntuación","Positivas", "Puntuación"),
               filter = "top",
               extensions = "Buttons", 
               width = "100%",
@@ -674,25 +677,24 @@ ur2 <- ggplot(head(data_emojis,20),
         axis.ticks.x=element_blank(),
         legend.position = "none")
 
-plotly <- plotly::ggplotly(ur2, 
-                           tooltip = c("label", "y", "text")
-)%>%
-  plotly::layout(title = "",
-                 annotations = list(x = 1, y = 0, 
-                                    text = caption, 
-                                    showarrow = F, 
-                                    xref='paper', 
-                                    yref='paper', 
-                                    xanchor='right', 
-                                    yanchor='auto', 
-                                    xshift=0, 
-                                    yshift=0,
-                                    font=list(size=15, color="red")))
 
-saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F, file="03_graficas/Emojis_twitter.html")
 
 if(is_html_output()) {
-  plotly
+    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  tooltip = c("label", "y", "text"))%>%
+    plotly::layout(title = "",
+                   annotations = list(x = 1, y = 0, 
+                                      text = caption, 
+                                      showarrow = F, 
+                                      xref='paper', 
+                                      yref='paper', 
+                                      xanchor='right', 
+                                      yanchor='auto', 
+                                      xshift=0, 
+                                      yshift=0,
+                                      font=list(size=15, color="red")))
+  
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F, file="03_graficas/Emojis_twitter.html")
+  div(plotly, class="myplot", align = "center")
 } else if(is_latex_output()) {
   include_graphics(path ="03_graficas/04_emojis_twitter.pdf")
 }

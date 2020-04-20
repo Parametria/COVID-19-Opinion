@@ -1,41 +1,67 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Offside&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Offside&display=swap');*/
 
 body {
     font-family: "Source Sans Pro","Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
-    line-height: 1.42857143;
+    line-height: 1.4;
     color: #555555;
     background-color: #ffffff;
+    
     font-weight: normal;
     text-align: justify;
     text-justify: inter-word;
 }
 
+.parallax { 
+    background-image: url('http://www.allfreepsd.com/download/AllFreePsd-Vector-Graphics-background-03_29.jpg');
+    /* Set a specific height */
+    height: 250px; 
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.myplot{
+  height:600px;
+  max-height:50%;
+}
+.myimg{
+    width: 30%;
+    max-width: 150px;
+    color: red;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0)
+    /*left: 50%;*/
+}
+
 /* This change the style of the main container that wraps the whole R Markdown document. It allows the parallax image to be full width */
 .main-container {
     max-width: 100% !important;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* Then we place our content with this style because we don't want it to be full width */
 .mycontent{
-      max-width: 900px !important;
+      max-width: 500px !important;
       margin-left: auto;
       margin-right: auto;
       line-height: 1.7;
-      padding-right: 15px;
-      padding-left: 15px;
+      padding-right: 5%;
+      padding-left: 5%;
 }
 
 h1, .h1, h2, .h2, h3, .h3 {
     color: #4F89C8;
-    margin-top: 84px;
+    margin-top: 40px;
 }
 
 h1 {
-  padding-top: 50px;
+  padding-top: 20px;
   font-family: Offside;
 }
 
@@ -51,7 +77,7 @@ pre {
 blue { 
   background-color:#e6f0ff; 
   border-radius: 5px; 
-  padding: 20px;
+  padding: 00px;
 }
 
 /* ---------- Links ----------------- */
@@ -69,10 +95,10 @@ a:hover {
 
 
 #TOC {
-  top: 25%;
+  top: 30%;
   position: fixed;
   background-color: transparent;
-  width: 210px;
+  width: 250px;
 }
 
 .tocify {
@@ -101,11 +127,11 @@ a:hover {
 
 /* ------ This is just to fix the bug on Safari where table of content is on top of content */
 .toc-content {
-  margin-left: 210px
+  margin-left: 250px
 }
 
 /* ------ Don't display on small media */
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
   #TOC {
     width: auto;
     display: none;
