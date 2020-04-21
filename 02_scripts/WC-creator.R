@@ -75,7 +75,7 @@ ats <- tweets %>%
 head(ats, 20)
 WC_ats_twitter <- wordcloud2(head(ats, 100),
                                    shape = "diamond", 
-                                   size = 1, 
+                                   size = .7, 
                                    #color = brewer.pal(n = 6, name = "Spectral"),
                                    fontWeight = "bold",
                                    minRotation = 1/pi, 
@@ -97,3 +97,4 @@ headats <- head(ats, 20)
 
 tol <- bind_cols(headhash, headfreq, headats)
 saveRDS(tol, "01_datos/tols.rds")
+readRDS("01_datos/tols.rds")
