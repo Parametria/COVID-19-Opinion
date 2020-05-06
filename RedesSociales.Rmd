@@ -12,7 +12,7 @@ output:
     css: '04_resources/style.css'
     df_print: paged
     include:
-      #after_body: '04_resources/footer.html'
+      after_body: '04_resources/footer.html'
       in_header: '04_resources/header.html'
     number_sections: no
     theme: lumen
@@ -186,7 +186,7 @@ El gráfico de tiempo presenta el número de tweets que mencionan el #COVID19MX.
 
 Es importante remarcar que los tweets tienen ciclos normales de creación determinado por las horas de descanso, así como la escalada esperada en los fines de semana. Este ejercicio permite evaluar la relevancia de un tema particular para la opinión pública usuaria de redes sociales y, subsecuentemente, entender su relación con eventos observados en un periodo de tiempo.
 
-En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días jueves 09 de abril y 16 de abril. El primero corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El segundo coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar qué localidades, por un lado, terminarían la jornada de sana distancia el día 17 de mayo y cuáles, por otro lado, extenderían esta medida hasta al menos el 30 de mayo.
+En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días 05 de abril, 09 de abril, 16 de abril y el 21 de abril. El primero se ajusta en tiempo al anuncio presidencial de acciones para la reactivación de la economía ante la emergencia del COVID-19 —este acontecimiento en particular se retomará más adelante. El segundo, corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El tercero coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López-Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar cuáles localidades terminarían la jornada de #SanaDistancia el día 17 de mayo y cuáles extenderían esta medida hasta al menos el 30 de mayo. Por último, el 21 de abril la conversación se centró en los comentarios del conductor del noticiero de TV Azteca, Javier Alatorre, quien se declaró en contra de la postura y recomendaciones del gobierno federal.
 
 Otro elemento que vale la pena remarcar es que la tendencia respecto a este tema va a la baja: en general, se habla menos de forma cotidiana, salvo que exista un estímulo en forma de noticia o comunicados oficiales que lo impulse.
 
@@ -293,10 +293,6 @@ if(params$view_html) {
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
-\newline
-En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días jueves 09 de abril y 16 de abril. El primero corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El segundo coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar qué localidades, por un lado, terminarían la jornada de sana distancia el día 17 de mayo y cuáles, por otro lado, extenderían esta medida hasta al menos el 30 de mayo.
-\newline
-Otro elemento que vale la pena remarcar es que la tendencia respecto a este tema va a la baja: en general, se habla menos de forma cotidiana, salvo que exista un estímulo en forma de noticia o comunicados oficiales que lo impulse.la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
 \newpage
 ```
 
@@ -342,7 +338,7 @@ DT::datatable(dt,
 ## <b>Temas</b>
 ***
 ```{block eval=FALSE, include=params$view_pdf}
-La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como Quedate en Casa— siguen vigentes al día de hoy. La palabra "casos" se incorpora al top 10, posiblemente debido al crecimiento acelerado de la curva epidemiológica nacional.
+La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como Sana Distancia— siguen vigentes al día de hoy. La palabra "fase" se incorpora al top 10,  debido a la entrada a la fase 3 en el país.
 ```
 
 ```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -362,7 +358,7 @@ include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 \newline
 <br>
 ```{block eval=FALSE, include=params$view_pdf}
-Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (#QuedateEnCasa, #SusanaDistancia). Sin embargo, el primer hashtag ya triplica en número de menciones al segundo. Esto puede ser indicativo que el quedarse en casa, como estrategia pública para evitar la propagación del virus, retomó aún más importancia en días recientes. Por otro lado, #Tlalnepantla (tema surgido de un brote del virus en un hospital ubicado en este municipio) sigue como uno de los hashtags más mencionados; sin embargo, la desaceleración en sus menciones es evidente, pues no sumó más de 40 menciones entre el 06 y el 20 de abril. Por último, la Ciudad de México aumentó 1000 menciones respecto al periodo pasado (20 de abril); la capital del país es la entidad con mayor número de casos confirmados.
+Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (1. #QuedateEnCasa, 2. #SusanaDistancia). Sin embargo, el primer hashtag ya triplica en número de menciones al segundo. Esto puede ser indicativo que el quedarse en casa, como estrategia pública para evitar la propagación del virus, retomó aún más importancia en días recientes. Por otro lado, #Tlalnepantla (tema surgido de un brote del virus en un hospital ubicado en este municipio) sigue como uno de los hashtags más mencionados; sin embargo, la desaceleración en sus menciones es evidente, pues no sumó más de 40 menciones entre el 06 y el 20 de abril. Por último, la Ciudad de México aumentó 1000 menciones respecto al periodo pasado (20 de abril); la capital del país es la entidad con mayor número de casos confirmados.
 ```
 
 ```{r out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
