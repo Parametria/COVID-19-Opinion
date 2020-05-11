@@ -33,7 +33,6 @@ params:
 <div class="pill-nav">
 <a href='https://Parametria.github.io/COVID-19-Opinion/'><b>Encuesta COVID-19 Parametría</b></a>
 <a class="active" href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Redes Sociales</b></a>
-<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Opinión Pública Internacional</b></a>
 </div>
 <br>
 <b>
