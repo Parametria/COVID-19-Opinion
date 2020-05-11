@@ -652,6 +652,7 @@ if(!file.exists("01_datos/emojis.rds")){
   #   )
   
   saveRDS(thead_emojis, "01_datos/emojis.rds")
+  write.csv2(thead_emojis, "01_datos/emojis.csv", fileEncoding = "UTF-8")
 } else {
   thead_emojis <- readRDS("01_datos/emojis.rds")
   thead_emojis2 <- read_csv2("01_datos/emojis.csv")
