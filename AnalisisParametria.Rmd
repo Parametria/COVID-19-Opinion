@@ -57,14 +57,15 @@ Descargue el archivo RMarkdown para crear este reporte aquí
 ```{block eval=FALSE, include=params$view_pdf}
 
 \fancypagestyle{plain}{\pagestyle{fancy}}
-La pandemia del COVID 19 ya se perfila como la principal protagonista de la última década. Aunque los aprendizajes que se pueden obtener de esta crisis son diversos, el más significativo reside en la importancia de la empatía como motor de la acción colectiva. Los ciudadanos de la aldea global juegan hoy un papel crucial ante esta pandemia, y en esta medida, el seguimiento a sus opiniones y comportamientos es esencial tanto para alterar el curso de la crisis como para entender su desarrollo. 
+El desarrollo de la pandemia de COVID-19 ha suscitado cambios significativos para diversos actores en nuestras sociedades. Los gobiernos han tenido que diseñar estrategias efectivas para atender esta crisis global de salud, así como han buscado también implementar medidas de mitigación para hacer frente a la actual y futura crisis económica. En este último campo, los empresarios se han visto obligados a generar nuevas formas de trabajo que permitan reducir las consecuencias de la inminente caída en la productividad. Asimismo, los ciudadanos han debido adaptarse a una nueva dinámica social consecuencia del aislamiento, así como han tenido que ajustarse a una nueva realidad económica que- en la mayoría de los casos- es muy desfavorable. Sin duda, la evolución de esta pandemia está teniendo efectos importantes en la opinión pública que deben mantenerse monitoreados.
+\newline
 
 ```
 
-En México, las nuevas disposiciones gubernamentales ante la emergencia restringen los trabajos demoscópicos cara a cara por tiempo indefinido, lo que subsecuentemente limitara la disponibilidad de información confiable sobre la opinión pública en el país. ^[Diversos estudios han señalado las limitaciones de las encuestas telefónicas y por internet. En países en desarrollo como México, el sesgo se concentra en el 50% de la población con mayores servicios, urbana, de mejores ingresos y mayor escolaridad con teléfono fijo en el hogar. Mientras que, entre los sondeos por internet, la escolaridad (educación tecnológica) y la edad son dos sesgos inminentes en solo el 70% de la población que es posible alcanzar por este medio.] Tras esta precisión, y como forma de adaptación a las nuevas medidas, Parametría realiza su medición de marzo con encuestas telefónicas. Aun teniendo en cuenta los sesgos intrínsecos de este tipo de levantamiento, la información obtenida resulta muy interesante.     
+Hay que recordar que, en México, las nuevas disposiciones gubernamentales ante la emergencia restringen los trabajos demoscópicos cara a cara por tiempo indefinido, lo que subsecuentemente limitará la disponibilidad de información confiable sobre la opinión pública en el país.  Tras esta precisión, y como forma de adaptación a las nuevas medidas, Parametría realiza su medición de abril con encuestas telefónicas. Aun teniendo en cuenta los sesgos intrínsecos de este tipo de levantamiento, la información obtenida resulta muy interesante.   
 <br>
 \newline
-En general, los entrevistados muestran altos niveles de información sobre el COVID-19, que se asocia también a sus altos niveles de preocupación de contagio. Si bien los mexicanos son conscientes de la crisis de salud, las condiciones socioeconómicas de los hogares hacen imposible- por lo menos para la mitad de los encuestados- detener sus labores económicas. Lo anterior encuentra eco en la preocupación de los entrevistados por el impacto negativo de la cuarentena sobre los ingresos familiares, así como en su pesimista evaluación sobre el desarrollo futuro de la pandemia en el país. Si bien quienes participaron en la encuesta hacen una evaluación positiva del Presidente y sus gobernadores estatales, aún manifiestan que éstas son insuficientes. 
+En general, los entrevistados afirman que sí se han visto afectados por la pandemia del COVID-19, lo que explica su alta preocupación de contagio. La mala evaluación de la situación económica y el pesimismo futuro en el tema, aunado al mayor porcentaje de entrevistados que afirma ya no tener miembros en el hogar que trabajen o que tuvieron una disminución de los ingresos familiares, completan un panorama poco alentador para los mexicanos. Los empresarios siguen siendo los principales actores responsables de atender las posibles afectaciones salariales, así como se espera que el gobierno entregue los apoyos económicos directo a los trabajadores. Asimismo, el gobierno federal mantiene su nivel de aprobación frente a la crisis, mientras que los mexicanos se mantienen escépticos respecto a la información de los medios.  
 \newpage
 ````{block eval = FALSE, include=params$view_html}
 
@@ -72,6 +73,7 @@ En general, los entrevistados muestran altos niveles de información sobre el CO
 ````
 
 ```{r echo=F, background="white", message = FALSE, warning = FALSE}
+require(png, quietly = T)
 require(readxl, quietly = T)
 require(tidyverse, quietly = T)
 require(stringi, quietly = T)
@@ -81,6 +83,7 @@ require(knitr, quietly = T)
 require(hrbrthemes, quietly = T)
 require(RColorBrewer, quietly = T)
 require(htmltools, quietly = T)
+require(ggpubr, quietly = T)
 
 saveWidgetFix <- function (widget,file,...) {
   ## A wrapper to saveWidget which compensates for arguable BUG in
@@ -93,11 +96,8 @@ saveWidgetFix <- function (widget,file,...) {
   setwd(outDir);
   saveWidget(widget,file=file,...)
 }
-
-cuadros_OP <- read_excel("01_datos/parametria_Datos.xlsx")
-# Transformaciones ----
-names(cuadros_OP)[6:40] <- paste0("r_", names(cuadros_OP)[6:40])
-color.palette <- function(steps, n.steps.between=NULL, ...){
+color.palette <- function(n.steps.between=NULL,
+                          steps, ...){
   
   if(is.null(n.steps.between)) n.steps.between <- rep(0, (length(steps)-1))
   if(length(n.steps.between) != length(steps)-1) stop("Must have one less n.steps.between value than steps")
@@ -120,11 +120,17 @@ color.palette <- function(steps, n.steps.between=NULL, ...){
   return(pal)
 }
 
-colfunc <- color.palette(c(brewer.pal(n = 11, "RdBu")[10],
-                           brewer.pal(n = 11, "RdBu")[7],
-                           brewer.pal(n = 11, "RdBu")[2]))
+colfunc <- color.palette(steps = c(brewer.pal(n = 11, "RdBu")[10],
+                                    brewer.pal(n = 11, "RdBu")[7],
+                                    brewer.pal(n = 11, "RdBu")[2]))
+## Data
 
-cuadros_OP <- cuadros_OP %>% 
+cuadros_OP1 <- read_excel("01_datos/parametria_Datos.xlsx")
+# Transformaciones ----
+names(cuadros_OP1)[6:63] <- paste0("r_", names(cuadros_OP1)[6:63])
+
+
+cuadros_OP <- cuadros_OP1 %>% 
   pivot_longer(cols = starts_with("r_"), 
                names_prefix = "r_",
                names_to = "id",
@@ -147,6 +153,7 @@ cuadros_OP <- cuadros_OP %>%
          color = colfunc(max)[as.numeric(id_num)],
          color = ifelse(is.na(color), "grey", color))
 
+
 categorias <- unique(cuadros_OP$Categoría)
 caption <- "Elaboración con datos de <a href='https://twitter.com/Parametria'>@Parametria</a>"
 caption1 <- "Elaboración propia con datos de Parametría"
@@ -155,25 +162,31 @@ caption1 <- "Elaboración propia con datos de Parametría"
 ```
 
 ```{block eval=FALSE, include=params$view_pdf}
-Entre los entrevistados, 9 de cada 10 mexicanos afirma mantenerse informado de los casos de COVID-19 que se han presentado en México y otros países del mundo. Asimismo, el 86% de los encuestados coincide en que el brote de este virus es un problema de salud mundial y no exclusivo de alguna región. En contraste, la opinión sobre el tratamiento mediático del tema sí está dividida. Mientras que un 44% de quienes contestaron la encuesta opina que los medios han tratado de forma correcta la información sobre el virus, otro 47% considera que han exagerado los riesgos de este brote. (Figura 1, 2 y 3)
+Pensando en la opinión pública como uno de los actores afectados por el COVID-19, y teniendo presente que este tipo de escenarios generan cambios muchas veces difíciles de explicar, hay que tener en cuenta que la ciudadanía está sujeta ahora a ciertas variables contextuales que construyen esa opinión. Los niveles de información sobre el tema, el tiempo en cuarentena, los temores y riesgos percibidos, así como la evaluación del trabajo de los líderes ante la crisis, son sólo algunas de estas variables. En este tema, la encuesta muestra que hasta el 81% de los mexicanos entrevistados sí ha percibido cambios significativos en su vida diaria y familiar con la llegada del COVID-19. De hecho, esta percepción de impacto creció hasta 10 puntos porcentuales respecto a la medición de marzo, lo que es evidencia de la propia evolución de la pandemia en el país. (Figura 1)
 ```
 
-```{r include=params$view_pdf,  out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Conocimiento de Coronavirus en México - Parametría"}
-pregunta1 <- "¿Usted está enterado de los casos de Coronavirus que se han presentado en México y algunos otros países?"
+```{block eval=FALSE, include=params$view_html}
+La encuesta muestra que hasta el 81% de los mexicanos entrevistados sí ha percibido cambios significativos en su vida diaria y familiar con la llegada del COVID-19. De hecho, esta percepción de impacto creció hasta 10 puntos porcentuales respecto a la medición de marzo, lo que es evidencia de la propia evolución de la pandemia en el país. (Figura 1)
+```
 
-titulo <- "Conocimiento de Coronavirus en México - Parametría"
+```{r include=params$view_pdf,  out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+pregunta1 <- "Pensando en el impacto que el coronavirus ha tenido en su vida diaria y la de su familia, ¿diría que ha cambiado mucho, algo, poco o no ha cambiado en nada su vida?"
+
+titulo <- "Impacto del Coronavirus en México - Parametría"
 subtitulo <- pregunta1
 
 data_cono <- cuadros_OP%>%
-  filter(Pregunta == pregunta1) 
+  filter(str_detect(Categoría, "Impacto")) 
 
 ur <-   ggplot(data_cono,
-               aes(x = str_wrap(id, 10), y = value,
+               aes(x = str_wrap(id, 10), 
+                   y = value,
                    fill = id, 
                    label = Porcentaje,
                    text = text)) +
   geom_col(width = 0.5) + 
-  scale_fill_manual(values = data_cono$color)+
+  facet_wrap(~fecha)+
+  scale_fill_manual("", values = data_cono$color)+
   theme_minimal() +
   labs(title = str_wrap(titulo, 50),
        subtitle = str_wrap(subtitulo, 50),
@@ -215,6 +228,7 @@ if(params$view_html) {
 } else if(params$view_pdf ){
   include_graphics(path ="03_graficas/param_conocimiento_covid.png", auto_pdf = T)
 }
+
 ```
 
 ```{r include=params$view_pdf,  out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="COVID-19 en el mundo según  México - Parametría"}
