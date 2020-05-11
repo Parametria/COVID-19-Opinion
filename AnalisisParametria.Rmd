@@ -77,6 +77,7 @@ require(png, quietly = T)
 require(readxl, quietly = T)
 require(tidyverse, quietly = T)
 require(stringi, quietly = T)
+require(lubridate, quietly = T)
 require(plotly, quietly = T)
 require(htmlwidgets, quietly = T)
 require(knitr, quietly = T)
@@ -125,12 +126,12 @@ colfunc <- color.palette(steps = c(brewer.pal(n = 11, "RdBu")[10],
                                     brewer.pal(n = 11, "RdBu")[2]))
 ## Data
 
-cuadros_OP1 <- read_excel("01_datos/parametria_Datos.xlsx")
+cuadros_OP <- read_excel("01_datos/parametria_Datos.xlsx")
 # Transformaciones ----
-names(cuadros_OP1)[6:63] <- paste0("r_", names(cuadros_OP1)[6:63])
+names(cuadros_OP)[6:51] <- paste0("r_", names(cuadros_OP)[6:51])
 
 
-cuadros_OP <- cuadros_OP1 %>% 
+cuadros_OP <- cuadros_OP %>% 
   pivot_longer(cols = starts_with("r_"), 
                names_prefix = "r_",
                names_to = "id",
@@ -176,23 +177,24 @@ titulo <- "Impacto del Coronavirus en México - Parametría"
 subtitulo <- pregunta1
 
 data_cono <- cuadros_OP%>%
-  filter(str_detect(Categoría, "Impacto")) 
+  filter(str_detect(Categoría, "Impacto")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y"))
 
-ur <-   ggplot(data_cono,
+ur <-   ggplot(data_cono%>%filter(fecha == min(data_cono$fecha)),
                aes(x = str_wrap(id, 10), 
                    y = value,
                    fill = id, 
                    label = Porcentaje,
                    text = text)) +
   geom_col(width = 0.5) + 
-  facet_wrap(~fecha)+
+  facet_wrap(vars(Fecha))+
   scale_fill_manual("", values = data_cono$color)+
   theme_minimal() +
   labs(title = str_wrap(titulo, 50),
        subtitle = str_wrap(subtitulo, 50),
       caption = caption1,
        x="",
-       y="") 
+       y="")
 ggsave("03_graficas/param_conocimiento_covid.pdf", plot = ur+
          geom_label(size = 8)+
          scale_y_percent(limits = c(0,(max(data_cono$value)+.1)))+
