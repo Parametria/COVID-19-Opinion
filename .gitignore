@@ -1,6 +1,5 @@
 
 01_datos/DiccionarioUNAfin.rds
-*.xlsx
 01_datos/covid_2.rds
 01_datos/tweets.rds
 01_datos/covid_6Mar20.rds
@@ -10,3 +9,5 @@ apikey/contraseñaTranslateEmojis.json
 .Rhistory
 01_datos/covid_02ABR20.rds
 01_datos/covid05MAY20.rds
+01_datos/covid_mex_20200401.xlsx
+01_datos/Cuadros_HTML2.xlsx
