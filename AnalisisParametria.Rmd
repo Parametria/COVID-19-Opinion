@@ -85,6 +85,7 @@ require(RColorBrewer, quietly = T)
 require(htmltools, quietly = T)
 require(ggpubr, quietly = T)
 
+u <- Sys.setlocale("LC_TIME", "Spanish")
 
 get_png <- function(filename) {
   grid::rasterGrob(png::readPNG(filename), interpolate = TRUE)
@@ -278,7 +279,9 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "Problema")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y"))
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))
 
 ur <-   ggplot(data_cono,
                aes(x = str_wrap(id, 10), y = value,
@@ -347,6 +350,8 @@ subtitulo <- pregunta
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "Miedo")) %>%
   mutate(Fecha = format(fecha, "%B-%Y"))%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>% 
   arrange(Fecha, id)#%>%
   #mutate(Respuesta = (reorder(id, desc(id))))
 
@@ -423,17 +428,20 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "EcoSocioRetro")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>%
   arrange(Fecha, id)
 
 ur <-   ggplot(data_cono,
-               aes(x = fecha, 
+               aes(x = Fecha, 
                    y = value,
                    colour =id , 
                    group = id,
                    label = Porcentaje,
                    text = text)) +
-  geom_line() + 
+  geom_line() +
+  #scale_x_datetime(date_breaks = "3 week", date_labels = "%b/%y")+
   scale_color_manual(values = data_cono$color)+
   theme_minimal() +
   labs(title = str_wrap(titulo, 50),
@@ -493,11 +501,13 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "EcoEgoRetro")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>%
   arrange(Fecha, id)
 
 ur <-   ggplot(data_cono,
-               aes(x = fecha, 
+               aes(x = Fecha, 
                    y = value,
                    colour =id , 
                    group = id,
@@ -561,11 +571,13 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "EcoSocioPros")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y"))%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
   arrange(Fecha, id)
 
 ur <-   ggplot(data_cono,
-               aes(x = fecha, 
+               aes(x = Fecha, 
                    y = value,
                    colour =id , 
                    group = id,
@@ -624,11 +636,13 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "EcoEgoPros")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>%
   arrange(Fecha, id)
 
 ur <-   ggplot(data_cono,
-               aes(x = fecha, 
+               aes(x = Fecha, 
                    y = value,
                    colour =id , 
                    group = id,
@@ -1015,11 +1029,13 @@ subtitulo <- pregunta
 
 data_cono <- cuadros_OP%>%
   filter(str_detect(Categoría, "ManejoFed")) %>%
-  mutate(Fecha = format(fecha, "%B-%Y")) %>%
+  mutate(Fecha = format(fecha, "%B-%Y"))%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
   arrange(Fecha, id)
 
 ur <-   ggplot(data_cono,
-               aes(x = fecha, 
+               aes(x = Fecha, 
                    y = value,
                    colour =id , 
                    group = id,
