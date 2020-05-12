@@ -86,6 +86,7 @@ require(htmltools, quietly = T)
 require(ggpubr, quietly = T)
 
 u <- Sys.setlocale("LC_TIME", "Spanish")
+u <- Sys.setlocale("LC_TIME", "es_ES.UTF-8")
 
 get_png <- function(filename) {
   grid::rasterGrob(png::readPNG(filename), interpolate = TRUE)
