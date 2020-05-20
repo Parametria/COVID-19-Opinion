@@ -1,6 +1,6 @@
 setwd("Desktop/extra/COVID-19-Opinion/")
 tweets <- readRDS(file = "01_datos/tweets.rds")
-
+require(wordcloud2)
 custom_stop_words <- enframe(tm::stopwords("es")) %>% 
   bind_rows(enframe(c( "t", "rt"))) %>% 
   rename(palabra = value)
@@ -47,7 +47,7 @@ hashtags <- tweets %>%
 head(hashtags, 20)
 WC_hashtags_twitter <- wordcloud2(head(hashtags, 150), 
                                   shape = "circle", 
-                                  size = .65, 
+                                  size = .6, 
                                   #color = brewer.pal(n = 6, name = "Spectral"),
                                   fontWeight = "bold",
                                   minRotation = 0,#1/pi, 
@@ -75,7 +75,7 @@ ats <- tweets %>%
 head(ats, 20)
 WC_ats_twitter <- wordcloud2(head(ats, 100),
                                    shape = "diamond", 
-                                   size = 1, 
+                                   size = .7, 
                                    #color = brewer.pal(n = 6, name = "Spectral"),
                                    fontWeight = "bold",
                                    minRotation = 1/pi, 
@@ -97,3 +97,4 @@ headats <- head(ats, 20)
 
 tol <- bind_cols(headhash, headfreq, headats)
 saveRDS(tol, "01_datos/tols.rds")
+readRDS("01_datos/tols.rds")

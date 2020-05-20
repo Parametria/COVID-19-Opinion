@@ -33,7 +33,6 @@ params:
 <div class="pill-nav">
 <a href='https://Parametria.github.io/COVID-19-Opinion/'><b>Encuesta COVID-19 Parametría</b></a>
 <a class="active" href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Redes Sociales</b></a>
-<a href='https://Parametria.github.io/COVID-19-Opinion/OpinionPublica.html'><b>Opinión Pública Internacional</b></a>
 </div>
 <br>
 <b>
@@ -119,7 +118,8 @@ BigramTokenizer <-
   function(x) {
     unlist(lapply(ngrams(words(x), 2), paste, collapse = " "), use.names = FALSE)
   }
-tweets <- readRDS("~/synology_shared/Parametría/Twitter-COVID/01_datos/covid_02ABR20.rds") %>% 
+if(!file.exists("01_datos/tweets.rds")){
+tweets <- readRDS("01_datos/covid05MAY20.rds") %>% 
   as_tibble() %>% 
   as_tibble() %>% 
   distinct(id_str, .keep_all = T)%>%
@@ -144,15 +144,11 @@ tweets <- readRDS("~/synology_shared/Parametría/Twitter-COVID/01_datos/covid_0
                        format = "%Y-%m-%d %T") - hours(7),
    RT = stri_detect(text, fixed = "RT"),
    replied_TO = ifelse(RT, stri_extract_first(text, regex = "@[[:alnum:]_]+"), "")
-  ) %>% filter(fecha>as.POSIXct("2020-03-30", format = "%Y-%m-%d")) %>% 
-  mutate(
-    test = as.character(hashtags),
-    keep = ifelse(
-      str_detect(tolower(test), "covid"), 1,0
-    )
-  ) %>% 
-  filter(keep==1) %>% select(-test) %>% select(-keep)
+  ) %>% filter(fecha>as.POSIXct("2020-03-30", format = "%Y-%m-%d"))
 saveRDS(tweets, "01_datos/tweets.rds")
+} else {
+  tweets <- readRDS("01_datos/tweets.rds")
+}
 ```
 
 # <b>Tiempo</b>
@@ -189,7 +185,7 @@ El gráfico de tiempo presenta el número de tweets que mencionan el #COVID19MX.
 
 Es importante remarcar que los tweets tienen ciclos normales de creación determinado por las horas de descanso, así como la escalada esperada en los fines de semana. Este ejercicio permite evaluar la relevancia de un tema particular para la opinión pública usuaria de redes sociales y, subsecuentemente, entender su relación con eventos observados en un periodo de tiempo.
 
-En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días jueves 09 de abril y 16 de abril. El primero corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El segundo coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar qué localidades, por un lado, terminarían la jornada de sana distancia el día 17 de mayo y cuáles, por otro lado, extenderían esta medida hasta al menos el 30 de mayo.
+En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días 05 de abril, 09 de abril, 16 de abril y el 21 de abril. El primero se ajusta en tiempo al anuncio presidencial de acciones para la reactivación de la economía ante la emergencia del COVID-19 —este acontecimiento en particular se retomará más adelante. El segundo, corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El tercero coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López-Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar cuáles localidades terminarían la jornada de #SanaDistancia el día 17 de mayo y cuáles extenderían esta medida hasta al menos el 30 de mayo. Por último, el 21 de abril la conversación se centró en los comentarios del conductor del noticiero de TV Azteca, Javier Alatorre, quien se declaró en contra de la postura y recomendaciones del gobierno federal.
 
 Otro elemento que vale la pena remarcar es que la tendencia respecto a este tema va a la baja: en general, se habla menos de forma cotidiana, salvo que exista un estímulo en forma de noticia o comunicados oficiales que lo impulse.
 
@@ -296,10 +292,6 @@ if(params$view_html) {
 ```
 ```{block eval=FALSE, include=params$view_pdf}
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
-\newline
-En la actualización de este reporte se incluyeron los tuits a partir del día 06 de abril de 2020. En este sentido, los puntos más altos fuera de tendencia correspondientes a este periodo se observan los días jueves 09 de abril y 16 de abril. El primero corresponde con el momento en el que se presentaron, por primera vez, las estimaciones de casos confirmados con base en el Modelo Centinela de Vigilancia Epidemiológica —estas cifras, debido a la carencia de una nota metodológica, causaron polémica e incluso confusión. El segundo coincide en fecha y horario con la conferencia matutina presidencial en la que el subsecretario Hugo López Gatell presentó un mapa desagregado a nivel municipal, cuyo propósito era ilustrar qué localidades, por un lado, terminarían la jornada de sana distancia el día 17 de mayo y cuáles, por otro lado, extenderían esta medida hasta al menos el 30 de mayo.
-\newline
-Otro elemento que vale la pena remarcar es que la tendencia respecto a este tema va a la baja: en general, se habla menos de forma cotidiana, salvo que exista un estímulo en forma de noticia o comunicados oficiales que lo impulse.la República en el que dio a conocer su plan de acción económica para enfrentar la pandemia.
 \newpage
 ```
 
@@ -319,7 +311,7 @@ Este ejercicio permite conocer los verbatismos más asociados con el tema de an�
 ```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_pdf, background="white", message = FALSE, warning = FALSE, fig.cap="Hashtags #, Arrobas y Temas - Twitter"}
 require(kableExtra, quietly = T)
 options(knitr.table.format = "latex")
-dt <- readRDS("~/Github/COVID-19-Opinion/01_datos/tols.rds")
+dt <- readRDS("01_datos/tols.rds")
 kable(dt, booktabs = T, col.names = c("Hashtags","Tweets","Temas", "Tweets", "Arrobas", "Tweets"))
 ```
 ```{r  out.width="100%", fig.height=7, fig.align='center', echo=F, include=params$view_html, background="white", message = FALSE, warning = FALSE}
@@ -345,7 +337,7 @@ DT::datatable(dt,
 ## <b>Temas</b>
 ***
 ```{block eval=FALSE, include=params$view_pdf}
-La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como sana distancia— siguen vigentes al día de hoy. La palabra "casos" se incorpora al top 10, posiblemente debido al crecimiento acelerado de la curva epidemiológica nacional.
+La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como Sana Distancia— siguen vigentes al día de hoy. La palabra "fase" se incorpora al top 10,  debido a la entrada a la fase 3 en el país.
 ```
 
 ```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -365,7 +357,7 @@ include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 \newline
 <br>
 ```{block eval=FALSE, include=params$view_pdf}
-Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (#QuedateEnCasa, #SusanaDistancia). Sin embargo, el primer hashtag ya dobla en número de menciones al segundo. Esto puede ser indicativo que el quedarse en casa, como estrategia pública para evitar la propagación del virus, retomó aún más importancia en días recientes. Por otro lado, #Tlalnepantla (tema surgido de un brote del virus en un hospital ubicado en este municipio) sigue como uno de los hashtags más mencionados; sin embargo, la desaceleración en sus menciones es evidente, pues no sumó más de 40 menciones entre el 06 y el 20 de abril. Por último, la Ciudad de México dobló el número de menciones respecto al periodo pasado; la capital del país es la entidad con mayor número de casos confirmados.
+Para este periodo de tiempo, la discusión pública en Twitter es dominada por aquellos hashtags relacionados con las recomendaciones gubernamentales para contener el contagio del virus (1. #QuedateEnCasa, 2. #SusanaDistancia). Sin embargo, el primer hashtag ya triplica en número de menciones al segundo. Esto puede ser indicativo que el quedarse en casa, como estrategia pública para evitar la propagación del virus, retomó aún más importancia en días recientes. Por otro lado, #Tlalnepantla (tema surgido de un brote del virus en un hospital ubicado en este municipio) sigue como uno de los hashtags más mencionados; sin embargo, la desaceleración en sus menciones es evidente, pues no sumó más de 40 menciones entre el 06 y el 20 de abril. Por último, la Ciudad de México aumentó 1000 menciones respecto al periodo pasado (20 de abril); la capital del país es la entidad con mayor número de casos confirmados.
 ```
 
 ```{r out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -385,7 +377,7 @@ include_graphics(path ="03_graficas/WC_hashtags_twitter.png", auto_pdf = T)
 \newline
 <br>
 ```{block eval=FALSE, include=params$view_pdf}
-Resulta interesante observar que la discusión pública en redes se relaciona fuertemente con las autoridades correspondientes. Para el periodo de tiempo analizado, el presidente se posiciona como primer lugar con un total de 9,641; en comparación con el reporte anterior, esto significó un incremento de más del 150%. El vocero del gobierno frente a la pandemia, Hugo López Gatell aparece en segundo lugar con un total de 8,938 menciones; equivalente a un incremento del 204% respecto al periodo anterior. También vale la pena destacar que el gobernador del estado de Jalisco, Enrique Alfaro, es el único mandatario local que aparece en el top 10 con un total de 2,180 menciones.
+Resulta interesante observar que la discusión pública en redes se relaciona fuertemente con las autoridades correspondientes. Para el periodo de tiempo analizado, el presidente se posiciona en segundo lugar con un total de 11,016; en comparación con el reporte anterior, esto significó un incremento de más del 150%. El vocero del gobierno frente a la pandemia, Hugo López Gatell aparece en segundo lugar con un total de 8,938 menciones; equivalente a un incremento del 15% respecto al periodo anterior. También vale la pena destacar que el gobernador del estado de Jalisco, Enrique Alfaro, ya no entró en el top 10 de menciones, por la entrada súbita de Javier Alatorre y Susana Distancia.
 ```
 
 ```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
@@ -634,12 +626,27 @@ if(!file.exists("01_datos/emojis.rds")){
     mutate(
       descr = stri_replace_last(translatedContent, fixed = " Copie y pegue este emoji: Copiar", ""),
       descr = gsub('&quot;', '', descr)
-    ) %>% select(-translatedContent)
+    ) %>% select(-translatedContent) 
+  # %>%
+  #   mutate(
+  #     descr = stri_replace_all(descr, fixed = "Ã¡", replacement = "á"),
+  #     descr = stri_replace_all(descr, fixed = "Ã©", replacement = "é"),
+  #     descr = stri_replace_all(descr, fixed = "Ã³", replacement = "ó"),
+  #     descr = stri_replace_all(descr, fixed = "Ãº", replacement = "ú"),
+  #     descr = stri_replace_all(descr, fixed = "Ã±", replacement = "ñ"),
+  #     descr = stri_replace_all(descr, fixed = "Ã<8d>", replacement = "Í"),
+  #     descr = stri_replace_all(descr, fixed = "Ã", replacement = "í"),
+  #     descr = stri_replace_all(descr, fixed = "â€“", replacement = "-"),
+  #     descr = stri_replace_all(descr, fixed = "Â°", replacement = "º"),
+  #     descr = stri_replace_all(descr, fixed = "ðŸ“„ ", replacement = ""),
+  #     
+  #     
+  #   )
   
   saveRDS(thead_emojis, "01_datos/emojis.rds")
 } else {
   thead_emojis <- readRDS("01_datos/emojis.rds")
-  thead_emojis2 <- read_csv("01_datos/emojis.csv")
+  thead_emojis2 <- read_csv2("01_datos/emojis.csv")
   thead_emojis$descr <- thead_emojis2$descr
   thead_emojis <- thead_emojis%>%
     mutate(
@@ -692,7 +699,7 @@ ur2 <- ggplot(head(data_emojis,20),
 
 
 if(is_html_output()) {
-    plotly <- plotly::ggplotly(ur+theme(axis.text.x = element_text(size=8)),height=600,  tooltip = c("label", "y", "text"))%>%
+    plotly <- plotly::ggplotly(ur2+theme(axis.text.x = element_text(size=8)),height=600,  tooltip = c("label", "y", "text"))%>%
     plotly::layout(title = "",
                    annotations = list(x = 1, y = 0, 
                                       text = caption, 
