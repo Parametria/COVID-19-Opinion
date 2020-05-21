@@ -294,6 +294,23 @@ if(params$view_html) {
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
 \newpage
 ```
+# <b>Los primeros días vs los últimos días</b> 
+***
+
+Más que una nueva normalidad, la discusión del COVID-19 en redes sociales es ya la normalidad. Si bien la frecuencia de tuits relacionados con el virus ha bajado considerablemente, como ya se presentó en la gráfica anterior, las palabras, menciones y temas relacionados con éste han tenido cierto dinamismo. Para ilustrar este ejercicio, se realizará una comparación entre los términos más mencionados en las primeras dos semanas de cuarentena y las últimas dos.
+
+Los hashtags de las primeras dos semanas son encabezados por #QuédateEnCasa, término que no perdió el liderato en ningún momento del periodo de analizado, y #SusanaDistancia. Destaca que #Tlalnepantla se encuentra dentro de los primeros diez hashtags más frecuentes, debido a haber sido el lugar de uno de los primeros brotes hospitalarios. Además, términos como #CuandoTermineLaCuarentena retratan una especie de nostalgia de la abandonada normalidad.
+
+En cambio, los hashtags de las últimas semanas se relacionan más con las actividades que ahora son cotidianas en el encierro: #PontePilaEnCasa, #YoConPontePila y #DeporteComunitario. Además, existe un boom en el recomocimiento del personal médico que se dedica a atender a pacientes COVID-19: #DíaDeLaEnfermería, #SalvaVidas y #GraciasPorCuidarnos. 
+
+La comparación de menciones a cuentas públicas entre ambos periodos de tiempo también arroja resultados interesantes. En las primeras dos semanas se observa que la Secretaría de Salud federal (SSalud) era la cuenta más mencionada; el subsecretario López-Gatell se hallaba en tercer lugar, después de la cuenta del presidente López Obrador. Además, varios funcionarios públicos federales —el canciller Ebrard, el director del IMSS Zoé Robledo y la secretaria de trabajo Luisa Alcalde— se encuentran en las primeras 20 posiciones debido a su rol central en la atención de distintas áreas de la epidemia. En materia loca, sólo los gobenadores Enrique Alfaro (Jalisco) y Alfredo del Mazo (EdoMex) logran entrar dentro de las cuentas con mayot número de menciones.
+
+En contraste, en las últimas semanas la cuenta más mencionada, como era de esperarse, es del vocero oficial del gobierno: Hugo López-Gatell; le sigue Ebrard y Obrador. En general, se tiende a mencionar menos las cuentas institucionales y se menciona más a las y los titulares de cada institución. También vale la pena destacar que varias cuentas relacionadas con el gobierno de la CDMX cobran relevancia; posiblemente debido a las intervenciones locales que se han hecho tanto en lo económico como en materia de salud pública en paralelo con lo establecido por el gobierno federal.
+
+Por último, el sentimiento de ambos periodos tiene diferencias significativas. Al iniciar el periodo de confinamiento, casi la totalidad de tuits se calificaron de forma negativa: la mayoría de los días no contaron con una hora promediada como positiva. Esto puede deberse a que, al momento, se conocía todavía menos de cómo se desarrollaría la epidemia. La falta de información puede generar miedo y confusión entre las personas, por lo que esto explicaría el pesimismo general de las y los usuarios de Twitter.
+
+En cambio, las últimas dos semanas, si bien aun el pesimismo impera, se han observado más tuits positivos. Destaca un punto particularmente alto entre el 13 y 14 de mayo. Esta ola de optimismo coincide con el anuncio de los municipios, denominados "Municipios de la Esperanza" por el gobierno federal, que regresarían a sus actividades regulares el 17 de mayo. Es probable que este pico se deba a muchos tuits relacionados con este anuncio: tanto el nombre del conjunto de tales localidades, como el anhelo por la nueva normalidad, explican que el sentimiento haya virado de dirección.
+
 
 # <b>Hashtags, Menciones y Temas</b> {.tabset .tabset-fade .tabset-pills}
 ***
