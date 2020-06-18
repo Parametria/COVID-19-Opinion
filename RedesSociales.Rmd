@@ -119,8 +119,7 @@ BigramTokenizer <-
     unlist(lapply(ngrams(words(x), 2), paste, collapse = " "), use.names = FALSE)
   }
 if(!file.exists("01_datos/tweets.rds")){
-tweets <- readRDS("01_datos/covid05MAY20.rds") %>% 
-  as_tibble() %>% 
+tweets <- readRDS("01_datos/covid_20MAY20.rds") %>% 
   as_tibble() %>% 
   distinct(id_str, .keep_all = T)%>%
   mutate(
@@ -128,7 +127,10 @@ tweets <- readRDS("01_datos/covid05MAY20.rds") %>%
     ats = stri_extract_all(text, regex = "@[[:alnum:]_]+"),
     emojis = stri_extract_all_charclass(text, "\\p{EMOJI}"),
     
-    texto = gsub(text, pattern = " ", replacement = "_"),
+    texto = stri_replace_all(text, regex = "#[[:alnum:]_]+", ""),
+    texto = stri_replace_all(texto, regex = "@[[:alnum:]_]+", ""),
+    texto = stri_replace_all_charclass(texto, "\\p{EMOJI}", ""),
+    texto = gsub(texto, pattern = " ", replacement = "_"),
     texto = gsub(texto, pattern = "[[:space:]]", replacement = ""),
     texto = gsub(texto, pattern = "_", replacement = " "),
     texto = gsub(texto, pattern = "ª", replacement = ""),
@@ -140,6 +142,7 @@ tweets <- readRDS("01_datos/covid05MAY20.rds") %>%
     texto = trimws(texto),
     texto = str_replace_all(texto, pattern = "rt", 
                             replacement = ""),
+    
     fecha = as.POSIXct(created, 
                        format = "%Y-%m-%d %T") - hours(7),
    RT = stri_detect(text, fixed = "RT"),
@@ -215,7 +218,7 @@ ur <- ggplot(data = tweets_sum,
   geom_point() +
   scale_color_continuous(NULL, NULL, NULL)+
   scale_size(NULL, NULL, NULL)+
-  scale_x_datetime(date_breaks = "1 day", date_labels =  "%b/%d")+
+  scale_x_datetime(date_breaks = "7 day", date_labels =  "%b/%d")+
   theme_ipsum(grid="Y") +
   labs(title=str_wrap(titulo, width = 80),
        subtitle = str_wrap(subtitulo, width = 80),
@@ -336,12 +339,12 @@ DT::datatable(dt,
 
 ## <b>Temas</b>
 ***
-```{block eval=FALSE, include=params$view_pdf}
+```{block eval=FALSE, include=params$view_png}
 La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como Sana Distancia— siguen vigentes al día de hoy. La palabra "fase" se incorpora al top 10,  debido a la entrada a la fase 3 en el país.
 ```
 
 ```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
-include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
+include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_png = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
 [Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_topicos_twitter.html)
