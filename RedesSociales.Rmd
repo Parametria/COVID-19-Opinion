@@ -297,6 +297,7 @@ if(params$view_html) {
 [\underline{Link a esta gráfica}](https://Parametria.github.io/COVID-19-Opinion/03_graficas/linea_tiempo_sentimiento_tweets.png)
 \newpage
 ```
+
 # <b>Los primeros días vs los últimos días</b> 
 ***
 
@@ -356,12 +357,12 @@ DT::datatable(dt,
 
 ## <b>Temas</b>
 ***
-```{block eval=FALSE, include=params$view_png}
+```{block eval=FALSE, include=params$view_pdf}
 La actualización de esta gráfica indica que las palabras relacionadas con las estrategias gubernamentales para prevenir la propagación del virus  —tales como Sana Distancia— siguen vigentes al día de hoy. La palabra "fase" se incorpora al top 10,  debido a la entrada a la fase 3 en el país.
 ```
 
 ```{r  out.width="100%",fig.height=6, fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Menciones más comunes en Tweets sobre COVID-19 en México - Twitter"}
-include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_png = T)
+include_graphics(path ="03_graficas/WC_topicos_twitter.png", auto_pdf = T)
 ```
 ```{block eval=FALSE, include=params$view_html}
 [Link a esta gráfica](https://Parametria.github.io/COVID-19-Opinion/03_graficas/WC_topicos_twitter.html)
@@ -470,7 +471,7 @@ ur <- ggplot(general_afinn ,
                  col = colour,
                  size=`Número de tweets`)) +
   geom_point()+
-  scale_x_datetime(date_breaks = "1 day", date_labels =  "%b/%d %I%p")+
+  scale_x_datetime(date_breaks = "1 week", date_labels =  "%b/%d %I%p")+
   scale_color_manual(values = c("#FC4E07", "grey",  "#00AFBB")) +
   scale_size_continuous("Sentimiento",
                         guide = guide_legend(override.aes = list(colour = "#E7B800"))) +
