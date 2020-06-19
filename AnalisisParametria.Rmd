@@ -12,7 +12,7 @@ output:
     css: '04_resources/style.css'
     df_print: paged
     include:
-      after_body: '04_resources/footer.html'
+      #after_body: '04_resources/footer.html'
       in_header: '04_resources/header.html'
     number_sections: no
     theme: lumen
