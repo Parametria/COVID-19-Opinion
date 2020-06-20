@@ -470,7 +470,7 @@ ur <- ggplot(general_afinn ,
                  col = colour,
                  size=`Número de tweets`)) +
   geom_point()+
-  scale_x_datetime(date_breaks = "1 week", date_labels =  "%b/%d %I%p")+
+  scale_x_datetime(date_breaks = "3 day", date_labels =  "%b/%d %I%p")+
   scale_color_manual(values = c("#FC4E07", "grey",  "#00AFBB")) +
   scale_size_continuous("Sentimiento",
                         guide = guide_legend(override.aes = list(colour = "#E7B800"))) +
