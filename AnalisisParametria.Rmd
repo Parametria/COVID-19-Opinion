@@ -171,7 +171,7 @@ Una de las variables más socorridas para conocer la opinión pública respecto 
 ## Manejo de la pandemia desde Presidencia
 ```
 
-```{r out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
 
 d <- cuadros_OP %>% 
   filter(reporte=="corto", v_id=="g1")
@@ -262,7 +262,7 @@ if(params$view_html) {
 Asimismo, esta buena percepción del trabajo del Ejecutivo se hace extensiva para otras instituciones que enfrentan en primera línea la actual crisis. En esta medida, la evaluación de la Secretaría de Salud –además de la buena opinión ciudadana de su principal figura el subsecretario López Gattell- se ve muy favorecida por la ciudadanía, al igual que el Instituto Mexicano del Seguro Social (IMSS) y el Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado (ISSSTE). (Figura 2)
 ```
 
-```{r include=params$view_pdf, out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
 
 d <- cuadros_OP_2 %>% 
   filter(reporte=="largo", categoría=="g2")
@@ -345,7 +345,7 @@ if(params$view_html) {
 De forma contrastante a la opinión sobre el trabajo del primer mandatario, los medios de comunicación siguen dividiendo a la opinión pública. En el tema, el más reciente informe del Proyecto de Opinión Pública de América Latina (LAPOP) de la Universidad de Vanderbilt, destacó que Estados Unidos, Colombia, México, Canadá y Chile son los países con menor índice de confianza en los medios de comunicación locales.  En este contexto, los datos de la encuesta de junio evidencian esta división de opinión entre lo/as mexicano/as encuestado/as con un 39% que afirma que los medios han exagerado el tema del COVID-19 en sus reportes, mientras que otro 44% considera que se han tratado de forma correcta los riesgos de contagio del virus. (Figura 3)
 ```
 
-```{r include=params$view_pdf, out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Medios de Comunicación - Parametría"}
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Medios de Comunicación - Parametría"}
 pregunta1 <- "Pensando en el brote de coronavirus, ¿cómo cree que los medios de comunicación han manejado el tema?"
 
 titulo <- "Medios de comunicación - Parametría"
@@ -428,7 +428,7 @@ Lejos del desempeño gubernamental frente a esta crisis, no cabe duda que esta p
 
 ## Impacto del coronavirus
 ```
-```{r out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
 d <- cuadros_OP %>% 
   filter(reporte=="largo", v_id=="g4")
 
@@ -512,7 +512,7 @@ if(params$view_html) {
 Los diferentes cambios señalados por los encuestados muestran su principal eco en el tema económico. Acorde con la Encuesta Telefónica de Ocupación y Empleo (ETOE) de abril del INEGI, los resultados evidencian la dramática caída del mercado laboral formal, así como la inminente crisis de las ocupaciones más informales en el país.  Acorde con los resultados de la encuesta de junio, el número de entrevistado/as que señaló que ninguno de los miembros de su familia tiene un trabajo por el que recibir un ingreso se incrementó en 10 puntos porcentuales respecto al mes anterior. Sin embargo, cabe señalar que este crecimiento es observado desde la medición de Parametría en abril, lo que permite comprobar los efectos del periodo de cuarentena (home-office, cierre temporal, subocupación, desempleo, entre otros). (Figura 5)
 ```
 
-```{r include=params$view_pdf, out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Situación Laboral durante Covid-19 - Parametría"}
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Situación Laboral durante Covid-19 - Parametría"}
 pregunta <- "De las personas que tienen un trabajo en su hogar, ¿cuántas ya no están acudiendo a sus lugares de trabajo como medida de prevención por el coronavirus?"
 
 titulo <- "Situación Laboral durante Covid-19 - Parametría"
@@ -597,7 +597,7 @@ La encuesta de junio indaga por situaciones específicas en detrimento del biene
 
 ## Problemas por coronavirus en el hogar
 ```
-```{r out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas En el Hogar - Parametría"}
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas En el Hogar - Parametría"}
 
 d <- cuadros_OP_2 %>% 
   filter(reporte=="largo", categoría=="g6")
@@ -676,7 +676,7 @@ if(params$view_html) {
 El presente revés económico de los hogares se hace evidente en las preocupaciones futuras de los ciudadanos. Los datos de la encuesta de Parametría señalan que hasta el 77% de lo/as encuestado/as afirma que el problema más importante para el país, una vez se haya superado la contingencia del COVID-19, será la economía. Si bien este dato parece reducirse respecto a mediciones anteriores (posiblemente explicado en la continuidad de sucesos de inseguridad o corrupción en el país), es evidente que no ha perdido su prelación respecto a otros temas igual de preocupantes. (Figura 7)
 ```
 
-```{r include=params$view_pdf,out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
+```{r include=params$view_pdf,out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
 pregunta <- "¿Cuál considera que es el principal problema del país en este momento?"
 
 titulo <- "Opinión de Principal Problema en México - Parametría"
@@ -755,7 +755,7 @@ Aunque los datos podrían indicar la urgencia de lo/as mexicano/as por salir de 
 
 ## Efectos del coronavirus en el hogar
 ```
-```{r out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
 d <- cuadros_OP %>% 
   filter(reporte=="largo", v_id=="g8")
 
@@ -806,11 +806,11 @@ ggsave("03_graficas/202007_g8.pdf", plot =gridExtra::grid.arrange(p3, print, hei
        width = 15, height = 10, dpi = 100)
 
 if(params$view_html) {
-  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), height=600, dynamicTicks = TRUE, tooltip = c("x","text"))%>%
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), height=600, tooltip = c("x","text"))%>%
     layout(yaxis = list(tickformat = "%"),
            title = "",
            hovermode = "x", 
-           tickvalues ="", 
+           #tickvalues ="", 
            showlegend = F,
            annotations = list(x = 1, y = 1, 
                               text = caption, 
@@ -836,7 +836,7 @@ if(params$view_html) {
 A esta aparente división de la opinión pública entre economía y salud, se suma la percepción sobre la gravedad de las consecuencias de esta pandemia. Los datos de la encuesta de Parametría evidencian una mayor polarización entre quienes creen que lo peor de la crisis ya pasó y quienes creen que aún puede empeorar. Cabe señalar que es esta última percepción la más generalizada reuniendo al 55% de los encuestados. Sin embargo, hay que denotar el importante crecimiento, respecto a la medición de mayo (31% y 37% respectivamente), de quienes opinan que los peores efectos del COVID-19 ya son parte del pasado. (Figura 9)
 ```
 
-```{r include=params$view_pdf, out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Sentimientos hacia futuro sobre COVID-19 - Parametría"}
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Sentimientos hacia futuro sobre COVID-19 - Parametría"}
 pregunta1 <- "¿Cuál de las siguientes opciones describe mejor sus sentimientos sobre el coronavirus en México?"
 
 titulo <- "Sentimientos hacia futuro sobre COVID-19 - Parametría"
@@ -918,7 +918,7 @@ Si bien las presiones económicas ya se hacen más evidentes, sobre todo en paí
 
 ## Sentimientos hacia el Coronavirus
 ```
-```{r out.width="70%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
 d <- cuadros_OP %>% 
   filter(reporte=="largo", v_id=="g10")
 

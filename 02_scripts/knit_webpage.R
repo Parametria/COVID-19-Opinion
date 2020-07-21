@@ -1,6 +1,4 @@
-setwd("~/Desktop/extra/COVID-19-Opinion/")
-
-
+#setwd("~/Desktop/extra/COVID-19-Opinion/")
 ## Build PDFs
 rmarkdown::render(input = "AnalisisParametria.Rmd", 
                   output_format = "pdf_document",  output_file = "AnalisisParametria")
