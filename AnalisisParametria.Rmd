@@ -1,5 +1,5 @@
 ---
-title: "Salud o economía: el falso dilema"
+title: "El persistente dilema entre salud y economía"
 author: "<center>[Parametría](http://parametria.com.mx/)</center>"
 date: "<center>`r format(Sys.time(), '%d/%m/%Y')`</center>"
 github: "Parametria/COVID-19-Opinion"
@@ -1012,7 +1012,9 @@ if(params$view_html) {
 | Fecha de levantamiento 2da ola | 23-24 de abril de 2020|
 |Número de entrevistas| 400 encuestas | 
 | Fecha de levantamiento 3ra ola | 24-27 de mayo de 2020|
-| Nivel de confianza estadística | 95%. Margen de error: (+/-) 4.8% |
+|Número de entrevistas| 407 encuestas | 
+| Fecha de levantamiento 4ta ola | 30 Junio - 1 Julio de 2020|
+| Nivel de confianza estadística | 95%. Margen de error: (+/-) 4.9% |
 | Diseño, muestreo, aplicación de entrevistas y análisis | Parametría SA de CV |
 | Método de muestreo | Aleatorio simple |
 
