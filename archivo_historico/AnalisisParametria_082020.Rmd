@@ -1,0 +1,1033 @@
+---
+title: "Salud o economía: el falso dilema"
+author: "<center>[Parametría](http://parametria.com.mx/)</center>"
+date: "<center>`r format(Sys.time(), '%d/%m/%Y')`</center>"
+github: "Parametria/COVID-19-Opinion"
+logo: "logo_gallery.png"
+mail: lorenzoln@parametria.com.mx
+lang: es
+output:
+  html_document:
+    collapsed: no
+    css: '04_resources/style.css'
+    df_print: paged
+    include:
+      #after_body: '04_resources/footer.html'
+      in_header: '04_resources/header.html'
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: no
+    toc_depth: '1'
+    keep_tex: false
+    extra_dependencies: ["xcolor", "fancyhdr", "graphicx"]
+params: 
+  view_pdf: !r knitr::is_latex_output()
+  view_html: !r knitr::is_html_output()
+---
+
+```{block eval=FALSE, include=params$view_html}
+<center>
+<div class="pill-nav">
+<a class="active" href='https://Parametria.github.io/COVID-19-Opinion/'><b>Encuesta COVID-19 Parametría</b></a>
+<a href='https://Parametria.github.io/COVID-19-Opinion/RedesSociales.html'><b>Redes Sociales</b></a>
+</div>
+
+
+<br>
+<b>
+Si quiere descargar el reporte completo en pdf haga click [Aquí](https://Parametria.github.io/COVID-19-Opinion/AnalisisParametria.pdf)
+</b>
+<br>
+<br>
+Descargue el archivo RMarkdown para crear este reporte aquí
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/blob/master/AnalisisParametria.Rmd)
+</center>
+<br>
+
+***
+```
+
+```{r echo=F, background="white", message = FALSE, warning = FALSE}
+require(png, quietly = T)
+require(readxl, quietly = T)
+require(tidyverse, quietly = T)
+require(stringi, quietly = T)
+require(lubridate, quietly = T)
+require(plotly, quietly = T)
+require(htmlwidgets, quietly = T)
+require(knitr, quietly = T)
+require(hrbrthemes, quietly = T)
+require(RColorBrewer, quietly = T)
+require(htmltools, quietly = T)
+require(ggpubr, quietly = T)
+
+u <- Sys.setlocale("LC_TIME", "Spanish")
+u <- Sys.setlocale("LC_TIME", "es_ES.UTF-8")
+
+get_png <- function(filename) {
+  grid::rasterGrob(png::readPNG(filename), interpolate = TRUE)
+}
+
+p3 <- ggplot(mapping = aes(x = 0:1, y = 1)) +
+  theme_void() +
+  annotation_custom(get_png("04_resources/logo2.png"), xmin = .8, xmax = 1)
+
+saveWidgetFix <- function (widget,file,...) {
+  ## A wrapper to saveWidget which compensates for arguable BUG in
+  ## saveWidget which requires `file` to be in current working
+  ## directory.
+  wd<-getwd()
+  on.exit(setwd(wd))
+  outDir<-dirname(file)
+  file<-basename(file)
+  setwd(outDir);
+  saveWidget(widget,file=file,...)
+}
+color.palette <- function(n.steps.between=NULL,
+                          steps, ...){
+  
+  if(is.null(n.steps.between)) n.steps.between <- rep(0, (length(steps)-1))
+  if(length(n.steps.between) != length(steps)-1) stop("Must have one less n.steps.between value than steps")
+  
+  fill.steps <- cumsum(rep(1, length(steps))+c(0,n.steps.between))
+  RGB <- matrix(NA, nrow=3, ncol=fill.steps[length(fill.steps)])
+  RGB[,fill.steps] <- col2rgb(steps)
+  
+  for(i in which(n.steps.between>0)){
+    col.start=RGB[,fill.steps[i]]
+    col.end=RGB[,fill.steps[i+1]]
+    for(j in seq(3)){
+      vals <- seq(col.start[j], col.end[j], length.out=n.steps.between[i]+2)[2:(2+n.steps.between[i]-1)]  
+      RGB[j,(fill.steps[i]+1):(fill.steps[i+1]-1)] <- vals
+    }
+  }
+  
+  new.steps <- rgb(RGB[1,], RGB[2,], RGB[3,], maxColorValue = 255)
+  pal <- colorRampPalette(new.steps, ...)
+  return(pal)
+}
+
+colfunc <- color.palette(steps = c(brewer.pal(n = 11, "RdBu")[10],
+                                    brewer.pal(n = 11, "RdBu")[7],
+                                    brewer.pal(n = 11, "RdBu")[2]))
+## Data
+cuadros_OP <- read_excel("01_datos/data_202007.xlsx")
+
+cuadros_OP_2 <- read_excel("01_datos/data_202007.xlsx") %>% 
+  rename(categoría = v_id, id_num = orden, id= var, value = props, Pregunta =fiuf) %>% 
+  drop_na(value)%>%
+  mutate(
+    value = value/100,
+    id = ifelse(id=="Nivel", País, id), 
+    id_clean = id,
+    id_num = case_when(
+      is.na(id_num)~ as.numeric(stri_extract_first(id, regex = "[:digit:]+")),
+     stri_detect(id, fixed = "no sabe", case_insensitive = T) ~ 99,
+      T~ as.numeric(id_num)
+      ),
+    
+    text = paste0(id_clean, "\n", "Porcentaje: " ,round(value*100, 0), "%" ),
+    prop = value*100,
+    Porcentaje = paste0(prop, "%"),
+    #value = value/100
+  )%>%
+  group_by(Pregunta)%>%
+  mutate(max = max(ifelse(as.numeric(id_num)==99, NA_integer_,as.numeric(id_num) ), na.rm = T)) %>% 
+  group_by(Pregunta)%>%
+  mutate(color = colfunc(max)[id_num],
+         color = ifelse(is.na(color), "grey", color))
+
+
+categorias <- unique(cuadros_OP$Categoría)
+caption <- "Elaboración con datos de <a href='https://twitter.com/Parametria'>@Parametria</a>"
+caption1 <- "Elaboración propia con datos de Parametría"
+#colorRamp(c(brewer.pal(n = 11, "RdBu")[1], brewer.pal(n = 11, "RdBu")[11]))
+```
+
+# Encuesta de Opinión por Parametría
+***
+
+<br>
+La pandemia del COVID-19 ha derivado en retos significativos para los diferentes gobiernos, siendo especialmente desafiantes en aquellos países con alta densidad poblacional y sistemas de salud precarios. En el tema, el director ejecutivo de la Organización Mundial de la Salud (OMS), Mike Ryan, ha advertido de las catastróficas consecuencias que podría implicar una reapertura económica en países con cifras aún tan altas de contagio.^[Romero, Henry (2020). “Coronavirus en México: OMS pronosticó un repunte drástico de casos”. INFOBAE, Reuters. DE: https://www.infobae.com/america/mexico/2020/07/11/coronavirus-en-mexico-oms-pronostico-un-repunte-drastico-de-casos/]
+```{block eval=FALSE, include=params$view_pdf}
+En contra de tales recomendaciones y debido a la problemática situación económica, especialmente en los países en desarrollo, las autoridades nacionales ya han iniciado protocolos y programas para retomar actividades en lo que llaman “la nueva normalidad”. Es en este contexto donde la evaluación ciudadana de figuras e instituciones se concentra hoy en su desempeño frente a la crisis que ha desatado el virus localmente. 
+```
+México no es ajeno a este comportamiento.   
+<br>
+\newline
+Hay que recordar que, a partir de este viernes 17 de julio, las disposiciones gubernamentales en México permiten reanudar los trabajos demoscópicos cara a cara en todo el país.^[El Financiero (2020). “Salud da ´luz verde´ para reanudar censos y encuestas en México”. Julio, Redacción. DE: https://elfinanciero.com.mx/nacional/salud-da-luz-verde-para-reanudar-censos-y-encuestas-en-mexico] Tras esta precisión, y debido que en el mes de junio estos ejercicios estaban aún restringidos, Parametría realizó su medición de ese mes con encuestas telefónicas. Aun teniendo en cuenta los sesgos intrínsecos de este tipo de levantamiento, la información obtenida resulta muy interesante.
+<br>
+\newline
+En general, los datos de la encuesta de junio de Parametría muestran que si bien los efectos de las medidas de mitigación de la pandemia del COVID-19 siguen mostrando efectos negativos sobre la economía familiar, el miedo a contagiarse del virus es el sentimiento más generalizado en la población encuestada. Sin embargo, con la evolución de la pandemia, las opiniones se muestran cada vez más polarizadas respecto a la decisión entre economía y salud. En este dilema, el trabajo del gobierno parece encontrar eco positivo en la opinión pública que sigue calificando favorablemente su desempeño durante esta crisis. Sin duda este último elemento de confianza ciudadana será fundamental para los protocolos de reactivación económica y retorno a la “nueva normalidad”.      
+
+Una de las variables más socorridas para conocer la opinión pública respecto al desempeño de la democracia en el país refiere a la evaluación ciudadana de los principales líderes o instituciones. En la situación actual, un foco principal de atención es el juicio sobre el trabajo del presidente en la atención a los efectos de la crisis del COVID-19. En México, esta opinión parece no tener cambios significativos desde el inicio de la pandemia. Los datos de la encuesta de junio de Parametría muestran que, si bien la buena evaluación de Andrés Manuel López Obrador disminuyó algunos puntos porcentuales en marzo, ésta se ha recuperado hasta reunir hoy al 65% de lo/as mexicano/as encuestado/as en junio. (Figura 1)
+ 
+```{block eval=FALSE, include=params$view_html}
+
+## Manejo de la pandemia desde Presidencia
+```
+
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+
+d <- cuadros_OP %>% 
+  filter(reporte=="corto", v_id=="g1")
+
+pregunta <- unique(d$fiuf)
+
+titulo <- "Manejo de la pandemia desde Presidencia"
+subtitulo <- pregunta
+
+data_cono <- d %>%
+  mutate(
+    Fecha = format(fecha, "%B-%Y"),
+    Porcentaje = paste0(props, "%")
+  )%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
+  arrange(Fecha, orden)
+
+ur <-   
+  ggplot(data_cono,
+               aes(x = Fecha, 
+                   y = props/100,
+                   colour =var , 
+                   group = var,
+                   label = Porcentaje,
+                   text = Porcentaje)) +
+  geom_line(size = 1.5) + 
+  #scale_color_manual("",values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="",
+       colour = "")
+print <-  ur +
+  geom_label(size = 8, show.legend = FALSE) +
+  scale_y_percent(
+    limits = c(0,1),
+    breaks = seq(0,1,.25),
+    labels = paste0(
+      as.character(seq(0,100,25)), "%"
+    )
+  ) +
+  theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_text(size = 25, vjust = 0.5),
+               axis.text.y = element_text(size = 15),
+               legend.position = "top"
+               )
+ggsave("03_graficas/202007_g1.pdf", plot =gridExtra::grid.arrange(p3, print, heights = c(.1, .9)),
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+                     height=600,
+                     dynamicTicks = TRUE, 
+                     tooltip = c("x","text")
+                     )%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "x", 
+           tickvalues ="", 
+           showlegend = F,
+           annotations = list(x = 1, y = 1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/202007_g1.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/202007_g1.png", auto_pdf = T)
+}
+```
+
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+Asimismo, esta buena percepción del trabajo del Ejecutivo se hace extensiva para otras instituciones que enfrentan en primera línea la actual crisis. En esta medida, la evaluación de la Secretaría de Salud –además de la buena opinión ciudadana de su principal figura el subsecretario López Gattell- se ve muy favorecida por la ciudadanía, al igual que el Instituto Mexicano del Seguro Social (IMSS) y el Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado (ISSSTE). (Figura 2)
+```
+
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
+
+d <- cuadros_OP_2 %>% 
+  filter(reporte=="largo", categoría=="g2")
+
+pregunta <- unique(d$fiuf)
+
+titulo <- "Manejo de la pandemia desde (...)"
+subtitulo <- pregunta
+
+data_cono <- d %>%
+  mutate(
+    Fecha = format(fecha, "%B-%Y")
+  )%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) 
+#%>%arrange(Fecha, orden)
+
+ur <-   ggplot(data_cono,
+               aes(x = v_var, 
+                   y = value,
+                   fill = id, 
+                   label = Porcentaje,
+                   text = text)) +
+  geom_col(width = 0.5) + 
+  scale_fill_manual(values = data_cono$color)+
+  coord_flip(clip = "off") +
+  #facet_grid(cols =vars(Fecha))+
+  theme_minimal() +
+  ylim(0, 1.05) +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="")
+
+print <- ur+ geom_label(size = 8, position =position_stack(vjust=.5))+
+         scale_y_percent(limits = c(0,1))+
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_blank(),
+               axis.text.y = element_text(size = 15),
+               legend.position = "none")
+
+ggsave("03_graficas/202007_g2.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)) , 
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+                     height=600, 
+                     #dynamicTicks = TRUE, 
+                     tooltip = c("text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "y", 
+           showlegend = F,
+           #tickvalues ="", 
+           annotations = list(x = 1, y = -0.283, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/202007_g2.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/202007_g2.png", auto_pdf = T)
+}
+
+```
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+De forma contrastante a la opinión sobre el trabajo del primer mandatario, los medios de comunicación siguen dividiendo a la opinión pública. En el tema, el más reciente informe del Proyecto de Opinión Pública de América Latina (LAPOP) de la Universidad de Vanderbilt, destacó que Estados Unidos, Colombia, México, Canadá y Chile son los países con menor índice de confianza en los medios de comunicación locales.  En este contexto, los datos de la encuesta de junio evidencian esta división de opinión entre lo/as mexicano/as encuestado/as con un 39% que afirma que los medios han exagerado el tema del COVID-19 en sus reportes, mientras que otro 44% considera que se han tratado de forma correcta los riesgos de contagio del virus. (Figura 3)
+```
+
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Medios de Comunicación - Parametría"}
+pregunta1 <- "Pensando en el brote de coronavirus, ¿cómo cree que los medios de comunicación han manejado el tema?"
+
+titulo <- "Medios de comunicación - Parametría"
+subtitulo <- pregunta1
+
+
+data_cono <- cuadros_OP_2 %>% 
+  filter(reporte=="largo", categoría=="g3")%>%
+  ungroup() %>% 
+  mutate(Fecha = format(fecha, "%B-%Y"),
+         id = factor(id),
+         id_clean = ifelse(as.numeric(id_num) == 99,"No sabe", id_clean ))%>%
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>%
+  arrange(fecha, id)
+
+
+ur <-   ggplot(data_cono,
+               aes(x = reorder(str_wrap(id_clean, 15), -as.numeric(id_num)), 
+                   y = value,
+                   fill = str_wrap(id_clean, 35), 
+                   label = Porcentaje,
+                   text = text)) +
+  scale_y_continuous(labels = scales::percent)+
+  geom_col(width = 0.5) + 
+  #coord_flip(clip = "off") +
+  facet_grid(cols =vars(reorder(Fecha, fecha)))+
+  scale_fill_manual("", values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+      caption = caption1,
+       x="",
+       y="")
+print <- ur+
+         geom_label(size = 7, show.legend = F)+
+         
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.y = element_text(size = 25, vjust = 0.5),
+               axis.text.x = element_blank(),
+               legend.position = "bottom")
+
+ggsave("03_graficas/medios_param.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)), 
+       width = 15, height = 10, dpi = 100)
+
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), tooltip = c("text"),height=600)%>%
+    layout(
+           title = "",
+           hovermode = "x", 
+           showlegend = F, 
+           annotations = list(x = 1, y = -0.1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/medios_param.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/medios_param.png", auto_pdf = T)
+}
+
+```
+
+<br>
+\newpage
+Lejos del desempeño gubernamental frente a esta crisis, no cabe duda que esta pandemia ha generado cambios significativos para la población. El distanciamiento social, el periodo de cuarentena y las restricciones para la actividad económica han generado consecuencias negativas para millones de hogares, especialmente en los países en desarrollo con altos niveles de pobreza. En este sentido, los datos de la encuesta de Parametría evidencian que lo/as mexicano/as no son ajeno/as a este comportamiento. El 73% de las personas encuestadas afirma que la llegada del COVID-19 ha cambiado significativamente su vida diaria, así como la de su familia. (Figura 4)
+
+```{block eval=FALSE, include=params$view_html}
+
+## Impacto del coronavirus
+```
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+d <- cuadros_OP %>% 
+  filter(reporte=="largo", v_id=="g4")
+
+pregunta <- unique(d$fiuf)
+
+titulo <- "Efectos del coronavirus"
+subtitulo <- pregunta
+
+data_cono <- d %>%
+  mutate(
+    Fecha = format(fecha, "%B-%Y"),
+    Porcentaje = paste0(props, "%")
+  )%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
+  arrange(Fecha, orden)
+
+ur <-   
+  ggplot(data_cono,
+               aes(x = Fecha, 
+                   y = props/100,
+                   colour =var , 
+                   group = var,
+                   label = Porcentaje,
+                   text = Porcentaje)) +
+  geom_line(size = 1.5) + 
+  #scale_color_manual("",values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="", color = "")
+print <-  ur +
+  geom_label(size = 8, show.legend = FALSE) +
+  scale_y_percent(
+    limits = c(0,1),
+    breaks = seq(0,1,.25),
+    labels = paste0(
+      as.character(seq(0,100,25)), "%"
+    )
+  ) +
+  theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_text(size = 25, vjust = 0.5),
+               axis.text.y = element_text(size = 15),
+               legend.position = "top"
+               )
+ggsave("03_graficas/202007_g4.pdf", plot =gridExtra::grid.arrange(p3, print, heights = c(.1, .9)),
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), height=600, dynamicTicks = TRUE, tooltip = c("x","text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "x", 
+           tickvalues ="", 
+           showlegend = F,
+           annotations = list(x = 1, y = 1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/202007_g4.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/202007_g4.png", auto_pdf = T)
+}
+```
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+Los diferentes cambios señalados por los encuestados muestran su principal eco en el tema económico. Acorde con la Encuesta Telefónica de Ocupación y Empleo (ETOE) de abril del INEGI, los resultados evidencian la dramática caída del mercado laboral formal, así como la inminente crisis de las ocupaciones más informales en el país.  Acorde con los resultados de la encuesta de junio, el número de entrevistado/as que señaló que ninguno de los miembros de su familia tiene un trabajo por el que recibir un ingreso se incrementó en 10 puntos porcentuales respecto al mes anterior. Sin embargo, cabe señalar que este crecimiento es observado desde la medición de Parametría en abril, lo que permite comprobar los efectos del periodo de cuarentena (home-office, cierre temporal, subocupación, desempleo, entre otros). (Figura 5)
+```
+
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Situación Laboral durante Covid-19 - Parametría"}
+pregunta <- "De las personas que tienen un trabajo en su hogar, ¿cuántas ya no están acudiendo a sus lugares de trabajo como medida de prevención por el coronavirus?"
+
+titulo <- "Situación Laboral durante Covid-19 - Parametría"
+subtitulo <- pregunta
+
+data_cono <- cuadros_OP_2 %>% 
+  filter(reporte=="largo", categoría=="g3")%>%
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>% 
+  arrange(Fecha, id_num)
+
+ur <-   ggplot(data_cono,
+               aes(x = reorder(str_wrap(paste0(id_clean, " "), 20), -as.numeric(id_num)), y = value,
+                   fill =id, 
+                   label = Porcentaje,
+                   text = text)) +
+  geom_col(width = 0.5) + 
+  scale_fill_manual(values = data_cono$color)+
+  coord_flip(clip = "off") +
+  facet_grid(cols =vars(Fecha), switch = "y")+
+  theme_minimal() +
+  ylim(0, 1.05) +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="")
+
+print <- ur+ geom_label(size = 8)+
+         scale_y_percent(limits = c(0,(max(data_cono$value)+.1)))+
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.y = element_text(size = 10), 
+               axis.text.x = element_blank(),
+               legend.position = "none")
+
+ggsave("03_graficas/labores_param.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)) , 
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plot <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+                     height=600, 
+                     #dynamicTicks = TRUE, 
+                     tooltip = c("text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "y", 
+           showlegend = F,
+           #tickvalues ="", 
+           annotations = list(x = 1, y = -0.283, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/labores_param.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/labores_param.png", auto_pdf = T)
+}
+
+```
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+Relacionado a lo anterior, la encuesta de junio indaga por situaciones específicas en detrimento del bienestar del hogar y que pueden o no estarse presentado durante esta crisis. En general, por lo menos un tercio de los hogares mexicanos muestran cambios negativos en la economía familiar. Mientras que el 48% de lo/as encuestado/as señala que ha tenido que usar sus ahorros para enfrentar la contingencia, un 39% afirma que ha perdido su empleo o le han reducido su salario en este periodo, y otro 30% ha tenido que endeudarse para hacer frente a la crisis. (Figura 6)
+```
+```{block eval=FALSE, include=params$view_html}
+<br>
+La encuesta de junio indaga por situaciones específicas en detrimento del bienestar del hogar y que pueden o no estarse presentado durante esta crisis. En general, por lo menos un tercio de los hogares mexicanos muestran cambios negativos en la economía familiar. Mientras que el 48% de lo/as encuestado/as señala que ha tenido que usar sus ahorros para enfrentar la contingencia, un 39% afirma que ha perdido su empleo o le han reducido su salario en este periodo, y otro 30% ha tenido que endeudarse para hacer frente a la crisis.  (Figura 6)
+```
+
+```{block eval=FALSE, include=params$view_html}
+
+## Problemas por coronavirus en el hogar
+```
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas En el Hogar - Parametría"}
+
+d <- cuadros_OP_2 %>% 
+  filter(reporte=="largo", categoría=="g6")
+
+pregunta <- unique(d$Pregunta)
+
+titulo <- "En su hogar (...)"
+subtitulo <- ""
+
+data_cono <- d %>% 
+  arrange(v_var,-id_num)
+
+ur <-   ggplot(data_cono,
+               aes(x = reorder(str_wrap(paste0(v_var, " "), 25), -as.numeric(id_num)), 
+                   y = value,
+                   fill = id, 
+                   label = Porcentaje,
+                   text = text)) +
+  geom_col(width = 0.5) + 
+  scale_fill_manual(values = data_cono$color)+
+  coord_flip(clip = "off") +
+  #facet_grid(cols =vars(Fecha))+
+  theme_minimal() +
+  ylim(0, 1.05) +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="",
+       fill = "")
+
+print <- ur+ geom_label(size = 8, position =position_stack(vjust=.5))+
+         scale_y_percent(limits = c(0,1))+
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_blank(),
+               axis.text.y = element_text(size = 12),
+               legend.position = "none")
+
+ggsave("03_graficas/hogar_op_param.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)) , 
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+                     height=600, 
+                     #dynamicTicks = TRUE, 
+                     tooltip = c("text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "y", 
+           showlegend = F,
+           #tickvalues ="", 
+           annotations = list(x = 1, y = -0.283, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/hogar_op_param.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/hogar_op_param.png", auto_pdf = T)
+}
+
+```
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+El presente revés económico de los hogares se hace evidente en las preocupaciones futuras de los ciudadanos. Los datos de la encuesta de Parametría señalan que hasta el 77% de lo/as encuestado/as afirma que el problema más importante para el país, una vez se haya superado la contingencia del COVID-19, será la economía. Si bien este dato parece reducirse respecto a mediciones anteriores (posiblemente explicado en la continuidad de sucesos de inseguridad o corrupción en el país), es evidente que no ha perdido su prelación respecto a otros temas igual de preocupantes. (Figura 7)
+```
+
+```{r include=params$view_pdf,out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Problemas de México - Parametría"}
+pregunta <- "¿Cuál considera que es el principal problema del país en este momento?"
+
+titulo <- "Opinión de Principal Problema en México - Parametría"
+subtitulo <- pregunta
+
+data_cono <- cuadros_OP_2 %>% 
+  filter(reporte=="largo", categoría=="g7") %>%
+  mutate(Fecha = format(fecha, "%B-%Y")) %>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>% 
+  arrange(Fecha, id)
+
+ur <-   ggplot(data_cono,
+               aes(x = reorder(str_wrap(id, 10), -id_num), y = value,
+                   fill = id, 
+                   label = Porcentaje,
+                   text = text)) +
+  geom_col(width = 0.5) + 
+  scale_fill_manual(values = data_cono$color)+
+  coord_flip(clip = "off") +
+  facet_grid(cols =vars(Fecha))+
+  theme_minimal() +
+  ylim(0, 1.05) +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="")
+
+print <- ur+ geom_label(size = 8)+
+         scale_y_percent(limits = c(0,(max(data_cono$value)+.1)))+
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 15, hjust = -0.1),
+               legend.position = "none")
+
+ggsave("03_graficas/problema_op_param.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)) , 
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), 
+                     height=600, 
+                     #dynamicTicks = TRUE, 
+                     tooltip = c("text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "y", 
+           showlegend = F,
+           #tickvalues ="", 
+           annotations = list(x = 1, y = -0.283, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/problema_op_param.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/problema_op_param.png", auto_pdf = T)
+}
+
+```
+
+<br>
+\newpage
+Aunque los datos podrían indicar la urgencia de lo/as mexicano/as por salir de la cuarentena y retomar las actividades económicas, la encuesta de junio advierte del latente miedo de las personas por salir a la calle. En el tema, y respecto al debate sobre las acciones que debería tomar el Gobierno en la actual situación de la pandemia, el 52% de las personas afirma que se debe dar prioridad a cuidar la salud de las personas y restringir que salgan a realizar sus trabajos, aunque esto pueda afectar la economía familiar. Sin embargo, con la evolución de la pandemia, las respuestas sobre este debate muestran hoy una opinión pública muy dividida, mostrando otro 45% de personas que afirma que ya es necesario dar mayor importancia a la economía, aunque exista el riesgo latente de contagio de COVID-19. (Figura 8)
+
+```{block eval=FALSE, include=params$view_html}
+
+## Efectos del coronavirus en el hogar
+```
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+d <- cuadros_OP %>% 
+  filter(reporte=="largo", v_id=="g8")
+
+pregunta <- unique(d$fiuf)
+
+titulo <- "Efectos del coronavirus en el hogar"
+subtitulo <- pregunta
+
+data_cono <- d %>%
+  mutate(
+    Fecha = format(fecha, "%B-%Y"),
+    Porcentaje = paste0(props, "%")
+  )%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
+  arrange(Fecha, orden)
+
+ur <- 
+ggplot(data_cono,
+               aes(x = reorder(str_wrap(var, 15), as.numeric(orden)), 
+                   y = props/100,
+                   fill = str_wrap(var, 35), 
+                   label = Porcentaje,
+                   text = Porcentaje)) +
+  scale_y_continuous(labels = scales::percent)+
+  geom_col(width = 0.5, show.legend = F) + 
+  #coord_flip(clip = "off") +
+  facet_grid(cols =vars(reorder(Fecha, fecha)))+
+  #scale_fill_manual("", values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+      caption = caption1,
+       x="",
+       y="")
+
+print <-  ur +
+  geom_label(size = 8, show.legend = FALSE) +
+  theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_text(size = 10, vjust = 0.5),
+               axis.text.y = element_text(size = 15),
+               legend.position = "top"
+               )
+ggsave("03_graficas/202007_g8.pdf", plot =gridExtra::grid.arrange(p3, print, heights = c(.1, .9)),
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), height=600, tooltip = c("x","text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "x", 
+           #tickvalues ="", 
+           showlegend = F,
+           annotations = list(x = 1, y = 1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/202007_g8.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/202007_g8.png", auto_pdf = T)
+}
+```
+
+```{block eval=FALSE, include=params$view_pdf}
+<br>
+\newpage
+A esta aparente división de la opinión pública entre economía y salud, se suma la percepción sobre la gravedad de las consecuencias de esta pandemia. Los datos de la encuesta de Parametría evidencian una mayor polarización entre quienes creen que lo peor de la crisis ya pasó y quienes creen que aún puede empeorar. Cabe señalar que es esta última percepción la más generalizada reuniendo al 55% de los encuestados. Sin embargo, hay que denotar el importante crecimiento, respecto a la medición de mayo (31% y 37% respectivamente), de quienes opinan que los peores efectos del COVID-19 ya son parte del pasado. (Figura 9)
+```
+
+```{r include=params$view_pdf, out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Sentimientos hacia futuro sobre COVID-19 - Parametría"}
+pregunta1 <- "¿Cuál de las siguientes opciones describe mejor sus sentimientos sobre el coronavirus en México?"
+
+titulo <- "Sentimientos hacia futuro sobre COVID-19 - Parametría"
+subtitulo <- pregunta1
+
+data_cono <- cuadros_OP_2%>%
+  ungroup() %>% 
+  filter(reporte=="largo", categoría=="g9") %>%
+  mutate(Fecha = format(fecha, "%B-%Y"),
+         id = factor(id),
+         id_clean = ifelse(as.numeric(id_num) == 99,"No sabe", id_clean ))%>%
+  arrange(Fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.)))%>%
+  arrange(Fecha, desc(id_num))
+
+
+ur <-   ggplot(data_cono,
+               aes(x = reorder(str_wrap(id_clean, 15), -as.numeric(id_num)), 
+                   y = value,
+                   fill = reorder(str_wrap(id_clean, 35), -as.numeric(id_num)), 
+                   label = Porcentaje,
+                   text = text)) +
+  scale_y_continuous(labels = scales::percent)+
+  geom_col(width = 0.5) + 
+  #coord_flip(clip = "off") +
+  facet_grid(cols =vars(reorder(Fecha, fecha)))+
+  scale_fill_manual("", values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+      caption = caption1,
+       x="",
+       y="")
+print <- ur+
+         geom_label(size = 7, show.legend = F)+
+         
+         theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.y = element_text(size = 25, vjust = 0.5),
+               axis.text.x = element_blank(),
+               legend.position = "bottom")
+
+ggsave("03_graficas/sentimientos_param.pdf", plot = gridExtra::grid.arrange(p3, print, heights = c(.1, .9)), 
+       width = 15, height = 10, dpi = 100)
+
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), tooltip = c("text"),height=600)%>%
+    layout(
+           title = "",
+           hovermode = "x", 
+           showlegend = F, 
+           annotations = list(x = 1, y = -0.1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/sentimientos_param.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/sentimientos_param.png", auto_pdf = T)
+}
+
+```
+
+<br>
+\newpage
+Si bien las presiones económicas ya se hacen más evidentes, sobre todo en países como México, el tema de salud sigue siendo una preocupación latente entre la ciudadanía. El miedo a contagiarse – y las posibles consecuencias derivadas- aún reúne a 7 de cada 10 mexicano/as encuestado/as. (Figura 10) En este contexto, un proceso de reactivación económica, así como de retorno a la “nueva normalidad”, deberían ser dinámicas paulatinas acordes con las necesidades comunitarias de subsistencia, así como de los procesos de adaptación de la población a los efectos de la pandemia del COVID-19. Sin duda, la calificación favorable del trabajo gubernamental es una clave fundamental para el éxito de tales medidas, este es un terreno ya ganado para el actual Presidente y su gabinete.           
+
+```{block eval=FALSE, include=params$view_html}
+
+## Sentimientos hacia el Coronavirus
+```
+```{r out.width="90%",  fig.align='center', echo=F, background="white", message = FALSE, warning = FALSE, fig.cap="Impacto del Coronavirus en México - Parametría"}
+d <- cuadros_OP %>% 
+  filter(reporte=="largo", v_id=="g10")
+
+pregunta <- unique(d$fiuf)
+
+titulo <- "Sentimientos hacia el Coronavirus"
+subtitulo <- pregunta
+
+data_cono <- d %>%
+  mutate(
+    Fecha = format(fecha, "%B-%Y"),
+    Porcentaje = paste0(props, "%")
+  )%>% 
+  arrange(fecha) %>% # sort
+  mutate_at(vars(Fecha), ~factor(., levels=unique(.))) %>%
+  arrange(Fecha, orden)
+
+ur <-   
+  ggplot(data_cono,
+               aes(x = Fecha, 
+                   y = props/100,
+                   colour =var , 
+                   group = var,
+                   label = Porcentaje,
+                   text = Porcentaje)) +
+  geom_line(size = 1.5) + 
+  #scale_color_manual("",values = data_cono$color)+
+  theme_minimal() +
+  labs(title = str_wrap(titulo, 50),
+       subtitle = str_wrap(subtitulo, 50),
+       x="",
+       y="",
+       color = "")
+print <-  ur +
+  geom_label(size = 8, show.legend = FALSE) +
+  scale_y_percent(
+    limits = c(0,1),
+    breaks = seq(0,1,.25),
+    labels = paste0(
+      as.character(seq(0,100,25)), "%"
+    )
+  ) +
+  theme(plot.title = element_text(size = 35, face = "bold"),
+               plot.subtitle = element_text(size = 25),
+               plot.caption = element_text(size = 15),
+               panel.spacing.x = unit(3, "lines"),
+               axis.text.x = element_text(size = 25, vjust = 0.5),
+               axis.text.y = element_text(size = 15),
+               legend.position = "top"
+               )
+ggsave("03_graficas/202007_g10.pdf", plot =gridExtra::grid.arrange(p3, print, heights = c(.1, .9)),
+       width = 15, height = 10, dpi = 100)
+
+if(params$view_html) {
+  plotly <- ggplotly(ur+theme(axis.text.x = element_text(size=8)), height=600, dynamicTicks = TRUE, tooltip = c("x","text"))%>%
+    layout(yaxis = list(tickformat = "%"),
+           title = "",
+           hovermode = "x", 
+           tickvalues ="", 
+           showlegend = F,
+           annotations = list(x = 1, y = 1, 
+                              text = caption, 
+                              showarrow = F, 
+                              xref='paper', 
+                              yref='paper', 
+                              xanchor='right', 
+                              yanchor='auto', 
+                              xshift=0, 
+                              yshift=0,
+                              font=list(size=15, color="red")))
+  saveWidgetFix(plotly,libdir = "graph_dependencies", selfcontained = F,
+                file="03_graficas/202007_g10.html")
+  div(plotly, class="myplot", align = "center")
+} else if(params$view_pdf ){
+  include_graphics(path ="03_graficas/202007_g10.png", auto_pdf = T)
+}
+```
+
+<br>
+\newpage
+
+# Nota metodológica
+
+| Aplicación de encuesta vía telefónica en CATI | Modalidad HOME-CATI llamadas realizadas desde casa|
+|:------|------:|
+| Representatividad | Hogares del país con teléfono en su vivienda | 
+| Población objetivo | Personas de 18 años en adelante residentes del país con teléfono en vivienda |
+|Número de entrevistas| 420 encuestas | 
+| Fecha de levantamiento 1ra ola | 28-29 de marzo de 2020|
+|Número de entrevistas| 420 encuestas | 
+| Fecha de levantamiento 2da ola | 23-24 de abril de 2020|
+|Número de entrevistas| 400 encuestas | 
+| Fecha de levantamiento 3ra ola | 24-27 de mayo de 2020|
+| Nivel de confianza estadística | 95%. Margen de error: (+/-) 4.8% |
+| Diseño, muestreo, aplicación de entrevistas y análisis | Parametría SA de CV |
+| Método de muestreo | Aleatorio simple |
+
+```{block eval=FALSE, include=params$view_html}
+# Info
+***
+
+<br>
+Revise el acervo histórico de reportes [aquí](https://github.com/Parametria/COVID-19-Opinion/archivo_historico).
+<br>
+Descargue el archivo RMarkdown para crear este reporte aquí
+[Rmarkdown](https://github.com/Parametria/COVID-19-Opinion/)
+<br>
+También puedes descargar el tema de este Rmd [aquí](https://holtzy.github.io/Pimp-my-rmd/).
+```
+```{block eval=FALSE, include=params$view_pdf}
+Descargue los archivo RMarkdown para crear este reporte aquí [\underline{Rmarkdown}](https://github.com/Parametria/COVID-19-Opinion).
+```
